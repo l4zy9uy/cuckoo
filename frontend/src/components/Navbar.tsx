@@ -1,5 +1,5 @@
 // src/components/Navbar.tsx
-import React from 'react';
+import React, {useState} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -14,7 +14,7 @@ import { CiCalendar } from 'react-icons/ci';
 import { PiMoneyWavy } from 'react-icons/pi';
 import { IoMdGlobe } from 'react-icons/io';
 import restaurantLogo from '../assets/restaurant.png';
-import { Button } from '@mui/material';
+import {Button, Menu, MenuItem} from '@mui/material';
 
 const menuItems = [
     { icon: <FaHome />, label: 'Tổng quan' },
@@ -30,8 +30,25 @@ const menuItems = [
     { icon: <PiMoneyWavy />, label: 'Thu ngân' },
 ];
 
-const NavbarComponent: React.FC = () => {
+const branches = ['Chi nhánh 1', 'Chi nhánh 2', 'Chi nhánh 3', 'Chi nhánh 4'];
 
+const NavbarComponent: React.FC = () => {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // Track menu anchor element
+    const [selectedBranch, setSelectedBranch] = useState<string>('Chi nhánh trung tâm'); // Track selected branch
+    const open = Boolean(anchorEl);
+
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget); // Set anchor element on click
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null); // Close the menu
+    };
+
+    const handleBranchSelect = (branch: string) => {
+        setSelectedBranch(branch); // Update the selected branch
+        handleMenuClose(); // Close the menu
+    };
 
     const leftMenuItems = menuItems.slice(0, -3);
     const rightMenuItems = menuItems.slice(-3);
@@ -51,10 +68,30 @@ const NavbarComponent: React.FC = () => {
 
                     {/* Right Section */}
                     <Box display="flex" alignItems="center" gap={2}>
-                        <FaMapMarkerAlt />
-                        <Typography>Chi nhánh trung tâm</Typography>
+                        <Button
+                            onClick={handleMenuOpen}
+                            startIcon={<FaMapMarkerAlt />}
+                            sx={{ textTransform: 'none' }}
+                        >
+                            {selectedBranch}
+                        </Button>
+
+                        {/* Dropdown Menu for Branches */}
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleMenuClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'branch-button',
+                            }}
+                        >
+                            {branches.map((branch, index) => (
+                                <MenuItem key={index} onClick={() => handleBranchSelect(branch)}>
+                                    {branch}
+                                </MenuItem>
+                            ))}
+                        </Menu>
                         <IoMdGlobe />
-                        <Typography>Tiếng Việt (VN)</Typography>
                         <FaCog />
                         <Typography>Manager</Typography>
                     </Box>
