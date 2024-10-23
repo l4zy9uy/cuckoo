@@ -1,24 +1,21 @@
 // src/components/Navbar.tsx
 import React from 'react';
-import '../styles/Navbar.css';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import {
-    FaCog , FaMapMarkerAlt, FaHome, FaBox,
+    FaCog, FaMapMarkerAlt, FaHome, FaBox,
     FaTable, FaExchangeAlt, FaHandshake, FaUsers,
     FaWallet, FaChartLine
 } from 'react-icons/fa';
-import { TbToolsKitchen } from "react-icons/tb";
-import { CiCalendar } from "react-icons/ci";
-import { PiMoneyWavy } from "react-icons/pi";
+import { TbToolsKitchen } from 'react-icons/tb';
+import { CiCalendar } from 'react-icons/ci';
+import { PiMoneyWavy } from 'react-icons/pi';
 import { IoMdGlobe } from 'react-icons/io';
 import restaurantLogo from '../assets/restaurant.png';
-import {
-    NavigationMenu,
-    NavigationMenuList,
-    NavigationMenuItem,
-    NavigationMenuLink,
-} from "../components/ui/navigation-menu";
+import { Button } from '@mui/material';
 
-// Define all menu items in one array
 const menuItems = [
     { icon: <FaHome />, label: 'Tổng quan' },
     { icon: <FaBox />, label: 'Hàng hóa' },
@@ -34,57 +31,67 @@ const menuItems = [
 ];
 
 const NavbarComponent: React.FC = () => {
-    const leftMenuItems = menuItems.slice(0, -3); // All except the last 3
-    const rightMenuItems = menuItems.slice(-3);   // Last 3 items
+
+
+    const leftMenuItems = menuItems.slice(0, -3);
+    const rightMenuItems = menuItems.slice(-3);
 
     return (
-        <div className="bg-white shadow-md">
-            {/* Top Bar */}
-            <div className="flex justify-between items-center px-4 py-2">
-                <div className="flex items-center gap-2">
-                    <img src={restaurantLogo} alt="logo" className="w-10 h-10 rounded-full" />
-                    <span className="font-bold text-xl">Cuckoo</span>
-                </div>
+        <>
+            {/* Top AppBar */}
+            <AppBar position="static" color="transparent" elevation={1}>
+                <Toolbar className="flex justify-between">
+                    {/* Logo Section */}
+                    <Box display="flex" alignItems="center" gap={2}>
+                        <img src={restaurantLogo} alt="logo" style={{ width: 40, height: 40, borderRadius: '50%' }} />
+                        <Typography variant="h6" noWrap component="div">
+                            Cuckoo
+                        </Typography>
+                    </Box>
 
-                <div className="flex items-center gap-4">
-                    <FaMapMarkerAlt className="text-lg" />
-                    <span>Chi nhánh trung tâm</span>
-                    <IoMdGlobe className="text-lg" />
-                    <span>Tiếng Việt (VN)</span>
-                    <FaCog className="text-lg" />
-                    <span>Manager</span>
-                </div>
-            </div>
+                    {/* Right Section */}
+                    <Box display="flex" alignItems="center" gap={2}>
+                        <FaMapMarkerAlt />
+                        <Typography>Chi nhánh trung tâm</Typography>
+                        <IoMdGlobe />
+                        <Typography>Tiếng Việt (VN)</Typography>
+                        <FaCog />
+                        <Typography>Manager</Typography>
+                    </Box>
+                </Toolbar>
+            </AppBar>
 
             {/* Blue Navigation Bar */}
-            <NavigationMenu className="bg-blue-600 text-white">
-                <NavigationMenuList className="flex justify-between items-center px-4 py-2">
+            <AppBar position="static" sx={{ bgcolor: 'primary.main', color: 'white' }}>
+                <Toolbar className="flex justify-between">
                     {/* Left Menu Items */}
-                    <div className="flex gap-6">
+                    <Box display="flex" gap={3}>
                         {leftMenuItems.map((item, index) => (
-                            <NavigationMenuItem key={index}>
-                                <NavigationMenuLink className="flex items-center gap-2">
-                                    {item.icon}
-                                    <span>{item.label}</span>
-                                </NavigationMenuLink>
-                            </NavigationMenuItem>
+                            <Button
+                                key={index}
+                                startIcon={item.icon}
+                                sx={{ color: 'white', textTransform: 'none' }}
+                            >
+                                {item.label}
+                            </Button>
                         ))}
-                    </div>
+                    </Box>
 
                     {/* Right Menu Items */}
-                    <div className="flex gap-6">
+                    <Box display="flex" gap={3}>
                         {rightMenuItems.map((item, index) => (
-                            <NavigationMenuItem key={index}>
-                                <NavigationMenuLink className="flex items-center gap-2">
-                                    {item.icon}
-                                    <span>{item.label}</span>
-                                </NavigationMenuLink>
-                            </NavigationMenuItem>
+                            <Button
+                                key={index}
+                                startIcon={item.icon}
+                                sx={{ color: 'white', textTransform: 'none' }}
+                            >
+                                {item.label}
+                            </Button>
                         ))}
-                    </div>
-                </NavigationMenuList>
-            </NavigationMenu>
-        </div>
+                    </Box>
+                </Toolbar>
+            </AppBar>
+        </>
     );
 };
 

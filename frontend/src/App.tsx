@@ -1,7 +1,7 @@
 // src/App.tsx
 import React from 'react';
 import NavbarComponent from './components/Navbar';
-import './styles/index.css';
+import './styles/index.css'; // Optional Tailwind usage
 
 const App: React.FC = () => {
     return (
