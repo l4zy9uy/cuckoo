@@ -1,58 +1,149 @@
 // src/components/Navbar.tsx
-import React, {useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import {Button, Menu, MenuItem, useTheme} from '@mui/material';
+// @ts-ignore
 import {
     FaCog, FaMapMarkerAlt, FaHome, FaBox,
     FaTable, FaExchangeAlt, FaHandshake, FaUsers,
     FaWallet, FaChartLine
 } from 'react-icons/fa';
-import { TbToolsKitchen } from 'react-icons/tb';
-import { CiCalendar } from 'react-icons/ci';
-import { PiMoneyWavy } from 'react-icons/pi';
-import { IoMdGlobe } from 'react-icons/io';
+import {TbToolsKitchen} from 'react-icons/tb';
+import {CiCalendar} from 'react-icons/ci';
+import {PiMoneyWavy} from 'react-icons/pi';
 import restaurantLogo from '../assets/restaurant.png';
-import {Button, Menu, MenuItem} from '@mui/material';
+import DropdownMenuItem, {
+    whiteBarItem
+} from "@/components/DropdownMenuItem.tsx";
 
-const menuItems = [
-    { icon: <FaHome />, label: 'Tổng quan' },
-    { icon: <FaBox />, label: 'Hàng hóa' },
-    { icon: <FaTable />, label: 'Phòng/Bàn' },
-    { icon: <FaExchangeAlt />, label: 'Giao dịch' },
-    { icon: <FaHandshake />, label: 'Đối tác' },
-    { icon: <FaUsers />, label: 'Nhân viên' },
-    { icon: <FaWallet />, label: 'Sổ quỹ' },
-    { icon: <FaChartLine />, label: 'Báo cáo' },
-    { icon: <TbToolsKitchen />, label: 'Nhà bếp' },
-    { icon: <CiCalendar />, label: 'Lễ tân' },
-    { icon: <PiMoneyWavy />, label: 'Thu ngân' },
+const stItems = [
+    {
+        title: 'Danh mục',
+        pathname: '/list'
+    },
+    {
+        title: 'Thiết lập giá',
+        pathname: '/cost'
+    },
+    {
+        title: 'Kiểm kho',
+        pathname: '/storage'
+    }
 ];
 
-const branches = ['Chi nhánh 1', 'Chi nhánh 2', 'Chi nhánh 3', 'Chi nhánh 4'];
+const nvItems = [
+    {
+        title: 'Nhân viên',
+        pathname: '/nv'
+    },
+    {
+        title: 'Lịch làm việc',
+        pathname: '/cal'
+    },
+    {
+        title: 'Thiết lập nhân viên',
+        pathname: '/emp'
+    }
+];
+
+const navBarItems: whiteBarItem[] = [
+    {icon: <FaHome/>, title: 'Tổng quan'},
+    {icon: <FaBox/>, title: 'Hàng hóa', submenu: stItems},
+    {icon: <FaTable/>, title: 'Phòng/Bàn'},
+    {icon: <FaExchangeAlt/>, title: 'Giao dịch'},
+    {icon: <FaHandshake/>, title: 'Đối tác'},
+    {icon: <FaUsers/>, title: 'Nhân viên', submenu: nvItems},
+    {icon: <FaWallet/>, title: 'Sổ quỹ'},
+    {icon: <FaChartLine/>, title: 'Báo cáo'},
+    {icon: <TbToolsKitchen/>, title: 'Nhà bếp'},
+    {icon: <CiCalendar/>, title: 'Lễ tân'},
+    {icon: <PiMoneyWavy/>, title: 'Thu ngân'},
+];
+
+const settings: whiteBarItem[] = [
+    {
+        title: 'Thong tin ca nhan',
+        pathname: '/profile'
+    },
+    {
+        title: 'Thiet lap cua hang',
+        pathname: '/store'
+    },
+    {
+        title: 'Quan ly chi nhanh',
+        pathname: '/branch1'
+    },
+    {
+        title: 'Lich su thao tac',
+        pathname: '/branch1'
+    },
+    {
+        title: 'Dang xuat',
+        pathname: '/branch1'
+    }
+]
+const branches = [
+    {
+        title: 'Chi nhánh 1',
+        pathname: '/b1'
+    },
+    {
+        title: 'Chi nhánh 2',
+        pathname: '/b2'
+    },
+    {
+        title: 'Chi nhánh 3',
+        pathname: '/b3'
+    },
+    {
+        title: 'Chi nhánh 4',
+        pathname: 'b/4'
+    },
+    {
+        title: 'Chi nhánh 5',
+        pathname: '/b5'
+    },
+    {
+        title: 'Chi nhánh 6',
+        pathname: '/b6'
+    },
+];
+const username = "abcyz";
+
+const menuItem: whiteBarItem[] = [
+    {
+        title: 'Chi nhanh trung tam',
+        icon: <FaMapMarkerAlt/>,
+        submenu: branches
+    },
+    {
+        title: username,
+        icon: <FaCog/>,
+        submenu: settings
+    }
+]
 
 const NavbarComponent: React.FC = () => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // Track menu anchor element
-    const [selectedBranch, setSelectedBranch] = useState<string>('Chi nhánh trung tâm'); // Track selected branch
-    const open = Boolean(anchorEl);
+    const [menuShowingDropdown, setMenuShowingDropdown] = useState("");
+    const handleMenuShowingDropdownChange = useCallback((menuTitle: string) => {
+        setMenuShowingDropdown(menuTitle);
+    }, []);
 
-    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget); // Set anchor element on click
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null); // Close the menu
-    };
-
-    const handleBranchSelect = (branch: string) => {
-        setSelectedBranch(branch); // Update the selected branch
-        handleMenuClose(); // Close the menu
-    };
-
-    const leftMenuItems = menuItems.slice(0, -3);
-    const rightMenuItems = menuItems.slice(-3);
-
+    const menuItems = menuItem.map((menuItem) => {
+        return (
+            <DropdownMenuItem
+                key={menuItem.title}
+                menuItem={menuItem}
+                menuShowingDropdown={menuShowingDropdown}
+                setMenuShowingDropdown={handleMenuShowingDropdownChange}
+            />
+        );
+    });
+    const leftMenuItems = navBarItems.slice(0, -3);
+    const rightMenuItems = navBarItems.slice(-3);
     return (
         <>
             {/* Top AppBar */}
@@ -60,72 +151,156 @@ const NavbarComponent: React.FC = () => {
                 <Toolbar className="flex justify-between">
                     {/* Logo Section */}
                     <Box display="flex" alignItems="center" gap={2}>
-                        <img src={restaurantLogo} alt="logo" style={{ width: 40, height: 40, borderRadius: '50%' }} />
-                        <Typography variant="h6" noWrap component="div">
+                        <img src={restaurantLogo} alt="logo" style={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: '50%'
+                        }}/>
+                        <Typography variant="h6" noWrap component="div"
+                                    sx={{fontSize: 72, fontWeight: 'bold'}}>
                             Cuckoo
                         </Typography>
                     </Box>
 
                     {/* Right Section */}
                     <Box display="flex" alignItems="center" gap={2}>
-                        <Button
-                            onClick={handleMenuOpen}
-                            startIcon={<FaMapMarkerAlt />}
-                            sx={{ textTransform: 'none' }}
-                        >
-                            {selectedBranch}
-                        </Button>
-
-                        {/* Dropdown Menu for Branches */}
-                        <Menu
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleMenuClose}
-                            MenuListProps={{
-                                'aria-labelledby': 'branch-button',
-                            }}
-                        >
-                            {branches.map((branch, index) => (
-                                <MenuItem key={index} onClick={() => handleBranchSelect(branch)}>
-                                    {branch}
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                        <IoMdGlobe />
-                        <FaCog />
-                        <Typography>Manager</Typography>
+                        {menuItems}
                     </Box>
                 </Toolbar>
             </AppBar>
 
             {/* Blue Navigation Bar */}
-            <AppBar position="static" sx={{ bgcolor: 'primary.main', color: 'white' }}>
-                <Toolbar className="flex justify-between">
-                    {/* Left Menu Items */}
-                    <Box display="flex" gap={3}>
-                        {leftMenuItems.map((item, index) => (
-                            <Button
-                                key={index}
-                                startIcon={item.icon}
-                                sx={{ color: 'white', textTransform: 'none' }}
+            <AppBar position="static" sx={{
+                bgcolor: 'primary.main',
+                color: 'white',
+                justifyContent: 'center',
+                height: 'auto'
+            }}>
+                <Toolbar
+                    className="flex justify-between"
+                    variant="dense"
+                    sx={{
+                        height: 10,
+                        paddingY: 0, // Removes extra vertical padding
+                    }}
+                >
+                    {/*Left Menu Items*/}
+                    <Box display="flex" gap={3} sx={{ marginLeft: 10}}>
+                        {leftMenuItems.map((item) => (
+                            <DropdownMenuItem
+                                key={item.title}
+                                sx={{
+                                    color: 'white',
+                                    height: 'auto',
+                                    minHeight: '0',
+                                    fontSize: 'auto',
+
+                                }}
+                                menuItem={item}
+                                menuShowingDropdown={menuShowingDropdown}
+                                setMenuShowingDropdown={handleMenuShowingDropdownChange}
+                            />
+                            /*<div
+
                             >
-                                {item.label}
-                            </Button>
+                                <Button
+                                    key={index}
+                                    startIcon={item.icon}
+                                    sx={,
+                                    }}
+                                >
+                                    {item.label}
+                                </Button>
+
+                                {item.submenu && item.submenu.length > 0 && (
+                                    <Menu
+                                        id="dropdown-menu"
+                                        anchorEl={anchorEl}
+                                        open={openMenu === index}
+                                        onClose={handleMouseLeave}
+                                        MenuListProps={{
+                                            onMouseEnter: () => setOpenMenu(index), // Prevent close when hovered over menu
+                                            onMouseLeave: handleMouseLeave, // Close when mouse leaves the menu
+                                        }}
+                                    >
+                                        {item.submenu.map((subItem, subIndex) => (
+                                            <MenuItem key={subIndex} onClick={handleMouseLeave}>
+                                                {subItem}
+                                            </MenuItem>
+                                        ))}
+                                    </Menu>
+                                )}
+                            </div>*/
+                        ))}
+                    </Box>
+                    <Box display="flex" gap={3}>
+                        {rightMenuItems.map((item) => (
+                            <DropdownMenuItem
+                                key={item.title}
+                                sx={{
+                                    color: 'white',
+                                    height: 'auto',
+                                    minHeight: '0',
+                                    fontSize: 'auto',
+
+                                }}
+                                menuItem={item}
+                                menuShowingDropdown={menuShowingDropdown}
+                                setMenuShowingDropdown={handleMenuShowingDropdownChange}
+                            />
+                            /*<div
+
+                            >
+                                <Button
+                                    key={index}
+                                    startIcon={item.icon}
+                                    sx={,
+                                    }}
+                                >
+                                    {item.label}
+                                </Button>
+
+                                {item.submenu && item.submenu.length > 0 && (
+                                    <Menu
+                                        id="dropdown-menu"
+                                        anchorEl={anchorEl}
+                                        open={openMenu === index}
+                                        onClose={handleMouseLeave}
+                                        MenuListProps={{
+                                            onMouseEnter: () => setOpenMenu(index), // Prevent close when hovered over menu
+                                            onMouseLeave: handleMouseLeave, // Close when mouse leaves the menu
+                                        }}
+                                    >
+                                        {item.submenu.map((subItem, subIndex) => (
+                                            <MenuItem key={subIndex} onClick={handleMouseLeave}>
+                                                {subItem}
+                                            </MenuItem>
+                                        ))}
+                                    </Menu>
+                                )}
+                            </div>*/
                         ))}
                     </Box>
 
-                    {/* Right Menu Items */}
+                    {/* Right Menu Items
                     <Box display="flex" gap={3}>
                         {rightMenuItems.map((item, index) => (
                             <Button
                                 key={index}
                                 startIcon={item.icon}
-                                sx={{ color: 'white', textTransform: 'none' }}
+                                sx={{
+                                    color: 'white',
+                                    textTransform: 'none',
+                                    '&:hover': {
+                                        backgroundColor: '#fff',
+                                        color: '#3c52b2',
+                                    },
+                                }}
                             >
                                 {item.label}
                             </Button>
                         ))}
-                    </Box>
+                    </Box>*/}
                 </Toolbar>
             </AppBar>
         </>
