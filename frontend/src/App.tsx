@@ -2,7 +2,6 @@
 import React from 'react';
 import NavbarComponent from './components/Navbar';
 import './styles/index.css';
-import {TopMenu} from "@/components/TopBar.tsx"; // Optional Tailwind usage
 
 const App: React.FC = () => {
     return (

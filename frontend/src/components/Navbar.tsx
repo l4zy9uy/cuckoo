@@ -1,11 +1,8 @@
-// src/components/Navbar.tsx
 import React, {useCallback, useRef, useState} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import {Button, Menu, MenuItem, useTheme} from '@mui/material';
-// @ts-ignore
 import {
     FaCog, FaMapMarkerAlt, FaHome, FaBox,
     FaTable, FaExchangeAlt, FaHandshake, FaUsers,
@@ -181,7 +178,7 @@ const NavbarComponent: React.FC = () => {
                     variant="dense"
                     sx={{
                         height: 10,
-                        paddingY: 0, // Removes extra vertical padding
+                        paddingY: 0,
                     }}
                 >
                     {/*Left Menu Items*/}
@@ -194,43 +191,15 @@ const NavbarComponent: React.FC = () => {
                                     height: 'auto',
                                     minHeight: '0',
                                     fontSize: 'auto',
-
+                                    '&:hover': {
+                                        backgroundColor: '#fff',
+                                        color: '#3c52b2',
+                                    }
                                 }}
                                 menuItem={item}
                                 menuShowingDropdown={menuShowingDropdown}
                                 setMenuShowingDropdown={handleMenuShowingDropdownChange}
                             />
-                            /*<div
-
-                            >
-                                <Button
-                                    key={index}
-                                    startIcon={item.icon}
-                                    sx={,
-                                    }}
-                                >
-                                    {item.label}
-                                </Button>
-
-                                {item.submenu && item.submenu.length > 0 && (
-                                    <Menu
-                                        id="dropdown-menu"
-                                        anchorEl={anchorEl}
-                                        open={openMenu === index}
-                                        onClose={handleMouseLeave}
-                                        MenuListProps={{
-                                            onMouseEnter: () => setOpenMenu(index), // Prevent close when hovered over menu
-                                            onMouseLeave: handleMouseLeave, // Close when mouse leaves the menu
-                                        }}
-                                    >
-                                        {item.submenu.map((subItem, subIndex) => (
-                                            <MenuItem key={subIndex} onClick={handleMouseLeave}>
-                                                {subItem}
-                                            </MenuItem>
-                                        ))}
-                                    </Menu>
-                                )}
-                            </div>*/
                         ))}
                     </Box>
                     <Box display="flex" gap={3}>
@@ -248,59 +217,8 @@ const NavbarComponent: React.FC = () => {
                                 menuShowingDropdown={menuShowingDropdown}
                                 setMenuShowingDropdown={handleMenuShowingDropdownChange}
                             />
-                            /*<div
-
-                            >
-                                <Button
-                                    key={index}
-                                    startIcon={item.icon}
-                                    sx={,
-                                    }}
-                                >
-                                    {item.label}
-                                </Button>
-
-                                {item.submenu && item.submenu.length > 0 && (
-                                    <Menu
-                                        id="dropdown-menu"
-                                        anchorEl={anchorEl}
-                                        open={openMenu === index}
-                                        onClose={handleMouseLeave}
-                                        MenuListProps={{
-                                            onMouseEnter: () => setOpenMenu(index), // Prevent close when hovered over menu
-                                            onMouseLeave: handleMouseLeave, // Close when mouse leaves the menu
-                                        }}
-                                    >
-                                        {item.submenu.map((subItem, subIndex) => (
-                                            <MenuItem key={subIndex} onClick={handleMouseLeave}>
-                                                {subItem}
-                                            </MenuItem>
-                                        ))}
-                                    </Menu>
-                                )}
-                            </div>*/
                         ))}
                     </Box>
-
-                    {/* Right Menu Items
-                    <Box display="flex" gap={3}>
-                        {rightMenuItems.map((item, index) => (
-                            <Button
-                                key={index}
-                                startIcon={item.icon}
-                                sx={{
-                                    color: 'white',
-                                    textTransform: 'none',
-                                    '&:hover': {
-                                        backgroundColor: '#fff',
-                                        color: '#3c52b2',
-                                    },
-                                }}
-                            >
-                                {item.label}
-                            </Button>
-                        ))}
-                    </Box>*/}
                 </Toolbar>
             </AppBar>
         </>
