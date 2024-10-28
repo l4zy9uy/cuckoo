@@ -202,6 +202,8 @@ const NavbarComponent: React.FC = () => {
                             />
                         ))}
                     </Box>
+
+                    {/*Right Menu Items*/}
                     <Box display="flex" gap={3}>
                         {rightMenuItems.map((item) => (
                             <DropdownMenuItem

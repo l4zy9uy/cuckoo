@@ -9,6 +9,7 @@ export type whiteBarItem = {
     submenu?: whiteBarItem[]
 };
 
+
 const DropdownMenuItem = ({
                               menuItem,
                               sx,
@@ -20,6 +21,7 @@ const DropdownMenuItem = ({
     menuShowingDropdown: string;
     setMenuShowingDropdown: (menuTitle: string) => void;
 }) => {
+    const theme = useTheme();
     const { title, submenu } = menuItem;
     const buttonRef = useRef<null | HTMLButtonElement>(null);
 
@@ -38,13 +40,15 @@ const DropdownMenuItem = ({
                     console.log("second level menu tiem click");
                 }}
                 key={subMenuItem.title}
+                sx={{
+                    color: '#ffffff',
+                }}
             >
                 {subMenuItem.title}
             </MenuItem>
         );
     });
 
-    const theme = useTheme();
 
     return (
         <>
@@ -60,7 +64,13 @@ const DropdownMenuItem = ({
                     }
                 }}
                 startIcon={menuItem.icon}
-                sx={{textTransform: 'none', zIndex: theme.zIndex.modal + 1, ...sx}}
+                sx={{
+                    textTransform: 'none',
+                    ...(submenu && {
+                        zIndex: theme.zIndex.modal + 1
+                    }),
+                    ...sx,
+                }}
             >
                 {title}
             </Button>
@@ -78,10 +88,15 @@ const DropdownMenuItem = ({
                             console.log("Mouse left");
                             closeSubMenu(); // Close submenu on mouse leave
                         },
+                        sx: {
+                            backgroundColor: theme.palette.primary.main, // Set background color of the menu
+                        }
                     },
                 }}
                 MenuListProps={{
                     'aria-labelledby': 'branch-button',
+                }}
+                sx={{
                 }}
             >
                 {subMenusNodes}
