@@ -1,5 +1,6 @@
 import {useCallback, useRef} from "react";
 import {Button, Menu, MenuItem, SxProps, Theme, useTheme} from "@mui/material";
+import { Link } from 'react-router-dom';
 
 
 export type whiteBarItem = {
@@ -54,6 +55,11 @@ const DropdownMenuItem = ({
         <>
             <Button
                 ref={buttonRef}
+                component={Link}
+                to={menuItem.pathname || '#'}
+                onClick={() => {
+                    console.log("Button is clicked")
+                }}
                 onMouseLeave={() => {
                     setMenuShowingDropdown("");
                 }}

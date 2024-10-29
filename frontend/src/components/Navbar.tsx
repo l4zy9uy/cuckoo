@@ -47,17 +47,17 @@ const nvItems = [
 ];
 
 const navBarItems: whiteBarItem[] = [
-    {icon: <FaHome/>, title: 'Tổng quan'},
-    {icon: <FaBox/>, title: 'Hàng hóa', submenu: stItems},
-    {icon: <FaTable/>, title: 'Phòng/Bàn'},
-    {icon: <FaExchangeAlt/>, title: 'Giao dịch'},
-    {icon: <FaHandshake/>, title: 'Đối tác'},
-    {icon: <FaUsers/>, title: 'Nhân viên', submenu: nvItems},
-    {icon: <FaWallet/>, title: 'Sổ quỹ'},
-    {icon: <FaChartLine/>, title: 'Báo cáo'},
-    {icon: <TbToolsKitchen/>, title: 'Nhà bếp'},
-    {icon: <CiCalendar/>, title: 'Lễ tân'},
-    {icon: <PiMoneyWavy/>, title: 'Thu ngân'},
+    { icon: <FaHome />, title: 'Tổng quan', pathname: '/' },
+    { icon: <FaBox />, title: 'Hàng hóa', submenu: stItems },
+    { icon: <FaTable />, title: 'Phòng/Bàn', pathname: '/tables' },
+    { icon: <FaExchangeAlt />, title: 'Giao dịch', pathname: '/transactions' },
+    { icon: <FaHandshake />, title: 'Đối tác', pathname: '/partners' },
+    { icon: <FaUsers />, title: 'Nhân viên', submenu: nvItems },
+    { icon: <FaWallet />, title: 'Sổ quỹ', pathname: '/fund' },
+    { icon: <FaChartLine />, title: 'Báo cáo', pathname: '/reports' },
+    { icon: <TbToolsKitchen />, title: 'Nhà bếp', pathname: '/kitchen' },
+    { icon: <CiCalendar />, title: 'Lễ tân', pathname: '/reception' },
+    { icon: <PiMoneyWavy />, title: 'Thu ngân', pathname: '/cashier' },
 ];
 
 const settings: whiteBarItem[] = [
