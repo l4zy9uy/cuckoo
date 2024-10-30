@@ -1,17 +1,12 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response } from "express";
+import dotenv from "dotenv";
+import authRoutes from "./routes/authRoutes";
+
+dotenv.config();
 
 const app = express();
-const PORT = 3000;
-
-// Middleware to parse JSON requests
 app.use(express.json());
 
-// A basic route
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, TypeScript + Express!');
-});
+app.use("/auth", authRoutes);
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+export default app;
