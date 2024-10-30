@@ -1,10 +1,13 @@
 import express, { Request, Response } from 'express';
+import toolRoutes from './routes/toolRoutes';
+
 
 const app = express();
 const PORT = 3000;
 
 // Middleware to parse JSON requests
 app.use(express.json());
+app.use('/api', toolRoutes);
 
 // A basic route
 app.get('/', (req: Request, res: Response) => {
