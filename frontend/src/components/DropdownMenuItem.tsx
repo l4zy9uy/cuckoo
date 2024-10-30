@@ -1,11 +1,19 @@
 import {useCallback, useRef} from "react";
-import {Button, Menu, MenuItem, SxProps, Theme, useTheme} from "@mui/material";
+import {
+    Button, ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    SxProps,
+    Theme,
+    useTheme
+} from "@mui/material";
 import { Link } from 'react-router-dom';
 
 
 export type whiteBarItem = {
     title: string,
-    icon?: Element,
+    icon?: React.ReactNode,
     pathname?: string,
     submenu?: whiteBarItem[]
 };
@@ -37,15 +45,16 @@ const DropdownMenuItem = ({
     const subMenusNodes = submenu?.map((subMenuItem) => {
         return (
             <MenuItem
-                onClick={() => {
-                    console.log("second level menu tiem click");
-                }}
+                component={Link} // Use Link to enable routing
+                to={subMenuItem.pathname || "#"} // Provide the route path
                 key={subMenuItem.title}
                 sx={{
-                    color: '#ffffff',
+                    color: "#ffffff",
+                    textDecoration: "none", // Remove underline from link
                 }}
             >
-                {subMenuItem.title}
+                <ListItemIcon sx={{ color: "white" }}>{subMenuItem.icon}</ListItemIcon>
+                <ListItemText primary={subMenuItem.title} />
             </MenuItem>
         );
     });

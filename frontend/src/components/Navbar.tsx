@@ -15,19 +15,25 @@ import restaurantLogo from '../assets/restaurant.png';
 import DropdownMenuItem, {
     whiteBarItem
 } from "@/components/DropdownMenuItem.tsx";
+import ViewCompactIcon from '@mui/icons-material/ViewCompact';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import LabelIcon from '@mui/icons-material/Label';
 
 const stItems = [
     {
+        icon: <ViewCompactIcon/>,
         title: 'Danh mục',
-        pathname: '/list'
+        pathname: '/products'
     },
     {
+        icon: <LabelIcon/>,
         title: 'Thiết lập giá',
-        pathname: '/cost'
+        pathname: '/pricebook'
     },
     {
+        icon: <AssignmentTurnedInIcon/>,
         title: 'Kiểm kho',
-        pathname: '/storage'
+        pathname: '/stocktakes'
     }
 ];
 
