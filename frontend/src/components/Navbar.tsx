@@ -18,116 +18,133 @@ import DropdownMenuItem, {
 import ViewCompactIcon from '@mui/icons-material/ViewCompact';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import LabelIcon from '@mui/icons-material/Label';
+import HandymanIcon from '@mui/icons-material/Handyman';
+import RoomIcon from '@mui/icons-material/Room';
+import ContactPageIcon from '@mui/icons-material/ContactPage';
+import HistoryIcon from '@mui/icons-material/History';
+import LogoutIcon from '@mui/icons-material/Logout';
+import GroupIcon from '@mui/icons-material/Group';
+import PersonIcon from '@mui/icons-material/Person';
+import PaidIcon from '@mui/icons-material/Paid';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const stItems = [
     {
-        icon: <ViewCompactIcon/>,
+        icon: <ViewCompactIcon />,
         title: 'Danh mục',
-        pathname: '/products'
+        pathname: '/Products'
     },
     {
-        icon: <LabelIcon/>,
+        icon: <LabelIcon />,
         title: 'Thiết lập giá',
-        pathname: '/pricebook'
+        pathname: '/PriceBook'
     },
     {
-        icon: <AssignmentTurnedInIcon/>,
+        icon: <AssignmentTurnedInIcon />,
         title: 'Kiểm kho',
-        pathname: '/stocktakes'
+        pathname: '/StockTakes'
+    }
+];
+
+const cartItems = [
+    {
+        icon: <PaidIcon />,
+        title: 'Hóa đơn',
+        pathname: '/Invoices'
+    },
+    {
+        icon: <ShoppingCartIcon />,
+        title: 'Nhập hàng',
+        pathname: '/PurchaseOrder'
     }
 ];
 
 const nvItems = [
     {
+        icon: <GroupIcon />,
         title: 'Nhân viên',
-        pathname: '/nv'
+        pathname: '/Employees'
     },
     {
+        icon: <CalendarMonthIcon />,
         title: 'Lịch làm việc',
-        pathname: '/cal'
+        pathname: '/Timesheet'
     },
     {
+        icon: <ManageAccountsIcon />,
         title: 'Thiết lập nhân viên',
-        pathname: '/emp'
+        pathname: '/EmployerSettings'
     }
 ];
 
-const navBarItems: whiteBarItem[] = [
+const navBarItems = [
     { icon: <FaHome />, title: 'Tổng quan', pathname: '/' },
     { icon: <FaBox />, title: 'Hàng hóa', submenu: stItems },
-    { icon: <FaTable />, title: 'Phòng/Bàn', pathname: '/tables' },
-    { icon: <FaExchangeAlt />, title: 'Giao dịch', pathname: '/transactions' },
-    { icon: <FaHandshake />, title: 'Đối tác', pathname: '/partners' },
+    { icon: <FaTable />, title: 'Phòng/Bàn', pathname: '/Tables' },
+    { icon: <FaExchangeAlt />, title: 'Giao dịch', submenu: cartItems },
+    { icon: <PersonIcon />, title: 'Khách hàng', pathname: '/Customers' },
+    { icon: <FaHandshake />, title: 'Nhà cung cấp', pathname: '/Suppliers' },
     { icon: <FaUsers />, title: 'Nhân viên', submenu: nvItems },
-    { icon: <FaWallet />, title: 'Sổ quỹ', pathname: '/fund' },
-    { icon: <FaChartLine />, title: 'Báo cáo', pathname: '/reports' },
-    { icon: <TbToolsKitchen />, title: 'Nhà bếp', pathname: '/kitchen' },
-    { icon: <CiCalendar />, title: 'Lễ tân', pathname: '/reception' },
-    { icon: <PiMoneyWavy />, title: 'Thu ngân', pathname: '/cashier' },
+    { icon: <FaWallet />, title: 'Sổ quỹ', pathname: '/Cashier' },
+    { icon: <FaChartLine />, title: 'Báo cáo', pathname: '/Reports' },
+    { icon: <TbToolsKitchen />, title: 'Nhà bếp', pathname: '/Kitchen' },
+    { icon: <CiCalendar />, title: 'Lễ tân', pathname: '/Reception' },
+    { icon: <PiMoneyWavy />, title: 'Thu ngân', pathname: '/Cashier' }
 ];
 
-const settings: whiteBarItem[] = [
+const settings = [
     {
-        title: 'Thong tin ca nhan',
-        pathname: '/profile'
+        icon: <RoomIcon />,
+        title: 'Thông tin cá nhân',
+        pathname: '/Profile'
     },
     {
-        title: 'Thiet lap cua hang',
-        pathname: '/store'
+        icon: <HandymanIcon />,
+        title: 'Thiết lập cửa hàng',
+        pathname: '/Store'
     },
     {
-        title: 'Quan ly chi nhanh',
-        pathname: '/branch1'
+        icon: <RoomIcon />,
+        title: 'Quản lý chi nhánh',
+        pathname: '/BranchManagement'
     },
     {
-        title: 'Lich su thao tac',
-        pathname: '/branch1'
+        icon: <HistoryIcon />,
+        title: 'Lịch sử thao tác',
+        pathname: '/OperationHistory'
     },
     {
-        title: 'Dang xuat',
-        pathname: '/branch1'
+        icon: <LogoutIcon />,
+        title: 'Đăng xuất',
+        pathname: '/Logout'
     }
-]
-const branches = [
-    {
-        title: 'Chi nhánh 1',
-        pathname: '/b1'
-    },
-    {
-        title: 'Chi nhánh 2',
-        pathname: '/b2'
-    },
-    {
-        title: 'Chi nhánh 3',
-        pathname: '/b3'
-    },
-    {
-        title: 'Chi nhánh 4',
-        pathname: 'b/4'
-    },
-    {
-        title: 'Chi nhánh 5',
-        pathname: '/b5'
-    },
-    {
-        title: 'Chi nhánh 6',
-        pathname: '/b6'
-    },
 ];
-const username = "abcyz";
 
-const menuItem: whiteBarItem[] = [
+const branches = [
+    { title: 'Chi nhánh 1', pathname: '/B1' },
+    { title: 'Chi nhánh 2', pathname: '/B2' },
+    { title: 'Chi nhánh 3', pathname: '/B3' },
+    { title: 'Chi nhánh 4', pathname: '/B4' },
+    { title: 'Chi nhánh 5', pathname: '/B5' },
+    { title: 'Chi nhánh 6', pathname: '/B6' }
+];
+
+const menuItem = [
     {
-        title: 'Chi nhanh trung tam',
-        icon: <FaMapMarkerAlt/>,
+        title: 'Chi nhánh trung tâm',
+        icon: <FaMapMarkerAlt />,
         submenu: branches
     },
     {
         title: username,
-        icon: <FaCog/>,
+        icon: <FaCog />,
         submenu: settings
     }
-]
+];
+
+const username = "abcyz";
 
 const NavbarComponent: React.FC = () => {
     const [menuShowingDropdown, setMenuShowingDropdown] = useState("");
@@ -188,7 +205,7 @@ const NavbarComponent: React.FC = () => {
                     }}
                 >
                     {/*Left Menu Items*/}
-                    <Box display="flex" gap={3} sx={{ marginLeft: 10}}>
+                    <Box display="flex" gap={3} sx={{marginLeft: 10}}>
                         {leftMenuItems.map((item) => (
                             <DropdownMenuItem
                                 key={item.title}
