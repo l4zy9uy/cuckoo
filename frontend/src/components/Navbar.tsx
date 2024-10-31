@@ -98,12 +98,12 @@ const settings = [
     {
         icon: <RoomIcon />,
         title: 'Thông tin cá nhân',
-        pathname: '/Profile'
+        pathname: '/ProfilePage'
     },
     {
         icon: <HandymanIcon />,
         title: 'Thiết lập cửa hàng',
-        pathname: '/Store'
+        pathname: '/PosSettings'
     },
     {
         icon: <RoomIcon />,
@@ -138,7 +138,7 @@ const menuItem = [
         submenu: branches
     },
     {
-        title: username,
+        title: 'hi',
         icon: <FaCog />,
         submenu: settings
     }
