@@ -1,16 +1,15 @@
 // src/pages/ProductsPage.tsx
-import React from 'react';
-
 import CustomTable from "../components/CustomTable.tsx";
 import {Grid2, Paper} from "@mui/material";
-import SidebarFilter from "@/components/SignbarFilter.tsx";
+import SidebarFilter from "@/components/SidebarFilter.tsx";
 import Box from "@mui/material/Box";
 import HeaderActions from "@/components/HeaderAction.tsx";
 import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx"
+import AddTableDialog from "@/components/dialogs/AddTableDialog.tsx";
 
 const productColumns = [
     {field: 'id', headerName: 'Mã hàng hóa', width: 150},
-    {field: 'name', headerName: 'Tên hàng', flex: 1},
+    {field: 'name', headerName: 'Tên hàng', flexGrow: 1},
     {field: 'type', headerName: 'Loại thực đơn', width: 150},
     {field: 'price', headerName: 'Giá bán', width: 120},
     {field: 'stock', headerName: 'Tồn kho', width: 120},
@@ -47,23 +46,62 @@ const productRows = [
     },
 ];
 
+const accordionData = [
+    {
+        title: 'Loại thực đơn',
+        items: [
+            { label: 'Đồ ăn' },
+            { label: 'Đồ uống' },
+            { label: 'Khác' },
+        ],
+    },
+    {
+        title: 'Loại hàng',
+        items: [
+            { label: 'Hàng hóa thường' },
+            { label: 'Chế biến' },
+            { label: 'Dịch vụ' },
+            { label: 'Combo - Đóng gói' },
+        ],
+    },
+    {
+        title: 'Nhóm hàng',
+        items: [
+            { label: 'Sản phẩm mới' },
+            { label: 'Sản phẩm nổi bật' },
+        ],
+    },
+];
+
 const ProductsPage = () => {
     return (
         <Grid2 container spacing={2} sx={{height: '100vh', padding: '1rem'}}>
             {/* Sidebar */}
-            <Grid2 item xs={3}>
+            <Grid2>
                 <Paper elevation={3} sx={{height: '100%'}}>
-                    <SidebarFilter/>
+                    <SidebarFilter
+                        title="Tìm kiếm"
+                        searchPlaceholder="Theo mã, tên hàng"
+                        accordionData={accordionData}
+                    />
                 </Paper>
             </Grid2>
 
             {/* Main Content */}
-            <Grid2 item xs={9} sx={{display: 'flex', flexDirection: 'column'}}
+            <Grid2 sx={{display: 'flex', flexDirection: 'column'}}
                    size="grow">
                 <Paper elevation={3}
                        sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                     <Box sx={{padding: '2rem', flex: 1, overflow: 'auto'}}>
-                        <HeaderActions/>
+                        <HeaderActions text="Khach hang"
+                                       DialogComponent={({ open, onClose }) => (
+                                           <AddTableDialog
+                                               open={open}
+                                               onClose={onClose}
+                                               onSave={(data) => console.log("Saved data:", data)}
+                                           />
+                                       )}
+                        />
                         <CustomTable rows={productRows}
                                      columns={productColumns}
                                      renderCollapse={(row) => (
