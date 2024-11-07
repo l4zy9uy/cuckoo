@@ -11,25 +11,19 @@ import {
     TableSortLabel,
     Checkbox,
     Collapse,
-    IconButton,
     TableFooter,
     TablePagination,
-    Box, Tabs, Tab, Grid2, Button,
 } from '@mui/material';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
-import Typography from "@mui/material/Typography";
-import CheckIcon from "@mui/icons-material/Check";
-import PrintIcon from "@mui/icons-material/Print";
-import DeleteIcon from "@mui/icons-material/Delete";
 
-type ProductTableProps = {
+
+type CustomTableProps = {
     rows: any[];
-    columns: { field: string; headerName: string }[];
+    columns: { field: string; headerName: string , width?: number, flexGrow?: number }[];
     pageSizeOptions?: number[]; // Options for page sizes
     renderCollapse?: (row: any) => React.ReactNode;
 };
 
-const CustomTable: React.FC<ProductTableProps> = ({ rows, columns, pageSizeOptions = [5, 10, 25], renderCollapse, }) => {
+const CustomTable: React.FC<CustomTableProps> = ({ rows, columns, pageSizeOptions = [5, 10, 25], renderCollapse, }) => {
     const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
     const [order, setOrder] = useState<'asc' | 'desc'>('asc');
     const [orderBy, setOrderBy] = useState<string | null>(null);
@@ -80,6 +74,7 @@ const CustomTable: React.FC<ProductTableProps> = ({ rows, columns, pageSizeOptio
         });
     };
 
+    // @ts-ignore
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
@@ -111,6 +106,10 @@ const CustomTable: React.FC<ProductTableProps> = ({ rows, columns, pageSizeOptio
                             <TableCell
                                 key={column.field}
                                 sortDirection={orderBy === column.field ? order : false}
+                                sx={{
+                                    width: column.width || 'auto',
+                                    flex: column.flexGrow ? 1 : undefined,
+                                }}
                             >
                                 <TableSortLabel
                                     active={orderBy === column.field}
@@ -121,7 +120,6 @@ const CustomTable: React.FC<ProductTableProps> = ({ rows, columns, pageSizeOptio
                                 </TableSortLabel>
                             </TableCell>
                         ))}
-                        <TableCell />
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -129,11 +127,16 @@ const CustomTable: React.FC<ProductTableProps> = ({ rows, columns, pageSizeOptio
                         const globalIndex = page * rowsPerPage + rowIndex;
                         return (
                             <React.Fragment key={globalIndex}>
-                                <TableRow selected={selectedRows.has(globalIndex)}>
+                                <TableRow
+                                    selected={selectedRows.has(globalIndex)}
+                                    onClick={() => handleExpandClick(globalIndex)}
+                                    sx={{ cursor: 'pointer' }} // Change cursor to indicate clickability
+                                >
                                     <TableCell padding="checkbox">
                                         <Checkbox
                                             checked={selectedRows.has(globalIndex)}
                                             onChange={() => handleCheckboxChange(globalIndex)}
+                                            onClick={(e) => e.stopPropagation()} // Prevent row click when checking checkbox
                                         />
                                     </TableCell>
                                     {columns.map((column) => (
@@ -141,18 +144,9 @@ const CustomTable: React.FC<ProductTableProps> = ({ rows, columns, pageSizeOptio
                                             {row[column.field]}
                                         </TableCell>
                                     ))}
-                                    <TableCell>
-                                        <IconButton
-                                            onClick={() => handleExpandClick(globalIndex)}
-                                            aria-label="expand row"
-                                            size="small"
-                                        >
-                                            {expandedRows.has(globalIndex) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                                        </IconButton>
-                                    </TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={columns.length + 2}>
+                                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={columns.length + 1}>
                                         <Collapse in={expandedRows.has(globalIndex)} timeout="auto" unmountOnExit>
                                             {renderCollapse && renderCollapse(row)}
                                         </Collapse>
