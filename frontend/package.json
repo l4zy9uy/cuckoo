@@ -15,6 +15,7 @@
     "@mui/icons-material": "^6.1.5",
     "@mui/material": "^6.1.5",
     "@mui/x-data-grid": "^7.22.0",
+    "@mui/x-date-pickers": "^7.22.1",
     "@radix-ui/react-navigation-menu": "^1.2.1",
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
+    "@faker-js/faker": "^9.2.0",
     "@types/node": "^22.7.9",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",

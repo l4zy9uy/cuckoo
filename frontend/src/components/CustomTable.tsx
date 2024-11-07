@@ -39,6 +39,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ rows, columns, pageSizeOption
 
     const sortedRows = React.useMemo(() => {
         if (!orderBy) return rows;
+        //shallow copy
         return [...rows].sort((a, b) => {
             const aValue = a[orderBy];
             const bValue = b[orderBy];

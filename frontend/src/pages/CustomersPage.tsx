@@ -6,7 +6,6 @@ import Box from "@mui/material/Box";
 import HeaderActions from "@/components/HeaderAction.tsx";
 import CustomTable from "@/components/CustomTable.tsx";
 import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx";
-import AddTableDialog from "@/components/dialogs/AddTableDialog.tsx";
 import AddCustomerDialog from "@/components/dialogs/AddCustomerDialog.tsx";
 
 const tableColumns = [
