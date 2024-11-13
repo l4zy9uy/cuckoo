@@ -59,18 +59,6 @@ const DropdownMenuItem = ({
         );
     });
 
-    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-
-    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handlePopoverClose = () => {
-        setAnchorEl(null);
-    };
-
-    const open = Boolean(anchorEl);
-
     return (
         <>
             <Button
@@ -129,65 +117,6 @@ const DropdownMenuItem = ({
             </Menu>
         </>
     )
-
-    // return (
-    //     <>
-    //         <Button
-    //             ref={buttonRef}
-    //             component={Link}
-    //             to={menuItem.pathname || '#'}
-    //             onClick={() => {
-    //                 console.log("Button is clicked")
-    //             }}
-    //             onMouseLeave={() => {
-    //                 setMenuShowingDropdown("");
-    //             }}
-    //             onMouseEnter={() => {
-    //                 if(menuItem.submenu) {
-    //                     showSubMenu();
-    //                     return;
-    //                 }
-    //             }}
-    //             startIcon={menuItem.icon}
-    //             sx={{
-    //                 textTransform: 'none',
-    //                 ...(submenu && {
-    //                     zIndex: theme.zIndex.modal + 1
-    //                 }),
-    //                 ...sx,
-    //             }}
-    //         >
-    //             {title}
-    //         </Button>
-    //         <Menu
-    //             anchorEl={buttonRef.current}
-    //             open={menuShowingDropdown === title}
-    //             onClose={closeSubMenu}
-    //             slotProps={{
-    //                 paper: {
-    //                     onMouseEnter: () => {
-    //                         console.log("Mouse entered");
-    //                         showSubMenu(); // Open submenu on mouse enter
-    //                     },
-    //                     onMouseLeave: () => {
-    //                         console.log("Mouse left");
-    //                         closeSubMenu(); // Close submenu on mouse leave
-    //                     },
-    //                     sx: {
-    //                         backgroundColor: theme.palette.primary.main, // Set background color of the menu
-    //                     }
-    //                 },
-    //             }}
-    //             MenuListProps={{
-    //                 'aria-labelledby': 'branch-button',
-    //             }}
-    //             sx={{
-    //             }}
-    //         >
-    //             {subMenusNodes}
-    //         </Menu>
-    //     </>
-    // )
 }
 
 export default DropdownMenuItem;

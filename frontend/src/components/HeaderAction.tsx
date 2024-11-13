@@ -1,15 +1,21 @@
 // src/components/HeaderActions.tsx
-import { Box, Button } from '@mui/material';
+import {Box, Button} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import Typography from "@mui/material/Typography";
-import React, { useState, ReactNode } from "react";
+import React, {useState, ReactNode} from "react";
 
 type HeaderActionsProps = {
     text: string;
-    DialogComponent: (props: { open: boolean; onClose: () => void }) => ReactNode; // Dialog as a function prop
+    DialogComponent: (props: {
+        open: boolean;
+        onClose: () => void
+    }) => ReactNode; // Dialog as a function prop
 };
 
-const HeaderActions: React.FC<HeaderActionsProps> = ({ text, DialogComponent }) => {
+const HeaderActions: React.FC<HeaderActionsProps> = ({
+                                                         text,
+                                                         DialogComponent
+                                                     }) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleDialogOpen = () => {
@@ -30,12 +36,13 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({ text, DialogComponent }) 
             <Typography fontWeight="bold" fontSize="28px">
                 {text}
             </Typography>
-            <Button variant="contained" startIcon={<AddIcon />} onClick={handleDialogOpen}>
+            <Button variant="contained" startIcon={<AddIcon/>}
+                    onClick={handleDialogOpen}>
                 Thêm mới
             </Button>
 
             {/* Render the DialogComponent with open and onClose props */}
-            {DialogComponent({ open: isDialogOpen, onClose: handleDialogClose })}
+            {DialogComponent({open: isDialogOpen, onClose: handleDialogClose})}
         </Box>
     );
 };
