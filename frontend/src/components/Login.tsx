@@ -1,5 +1,4 @@
 // src/LoginPage.js
-import React from 'react';
 import { Grid2, Typography, TextField, Button, Box } from '@mui/material';
 import loginImage from '../assets/login_image.jpg';
 
@@ -15,8 +14,6 @@ const Login = () => {
         >
             {/* Left Side - Login Form */}
             <Grid2
-                xs={12}
-                md={6}
                 sx={{
                     backgroundColor: '#ffffff',
                     display: 'flex',
@@ -64,8 +61,6 @@ const Login = () => {
 
             {/* Right Side - Promotional Content */}
             <Grid2
-                xs={12}
-                md={6}
                 sx={{
                     //background: 'linear-gradient(to right, #7B61FF, #9B33FF)',
                     backgroundImage: `url(${loginImage})`, // Use template literal correctly
