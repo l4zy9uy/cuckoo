@@ -5,10 +5,10 @@ import {
     Tabs,
     Tab,
     Typography,
-    Grid2,
     Button,
     SxProps,
 } from '@mui/material';
+import Grid2 from '@mui/material/Grid2'; // Use Grid2 for flex layout and spacing
 import CheckIcon from "@mui/icons-material/Check";
 import PrintIcon from "@mui/icons-material/Print";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -40,24 +40,29 @@ const ProductDetailsCollapse: React.FC<ProductDetailsCollapseProps> = ({
                                                                        }) => {
     return (
         <Box>
-            <Tabs variant="scrollable" scrollButtons="auto">
+            {/* Tabs for sections */}
+            <Tabs
+                variant="scrollable"
+                scrollButtons="auto"
+                sx={{ borderBottom: 1, borderColor: 'divider' }}
+            >
                 {tabs.map((tab, index) => (
                     <Tab label={tab} key={index} />
                 ))}
             </Tabs>
 
-            <Box sx={{ padding: '1rem', backgroundColor: '#f9f9f9', borderRadius: '8px', marginTop: '1rem' }}>
+            <Box sx={{ padding: 3, backgroundColor: 'background.paper', borderRadius: 2, marginTop: 2, boxShadow: 1 }}>
                 <Grid2 container spacing={3}>
                     {/* Left Section - Image and Status */}
-                    <Grid2 display="flex" flexDirection="column" alignItems="center">
-                        <Typography variant="h5" fontWeight="bold" gutterBottom>{productName}</Typography>
+                    <Grid2 size={{ xs: 12, md: 3}} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <Typography variant="h6" fontWeight="bold" gutterBottom>{productName}</Typography>
                         {statusIcons.map((status, index) => (
                             <Typography
                                 key={index}
                                 color={status.color}
                                 display="flex"
                                 alignItems="center"
-                                sx={{ marginBottom: 1 }}
+                                sx={{ mb: 1 }}
                             >
                                 {status.icon} {status.label}
                             </Typography>
@@ -66,17 +71,27 @@ const ProductDetailsCollapse: React.FC<ProductDetailsCollapseProps> = ({
                             component="img"
                             src={imageUrl}
                             alt={productName}
-                            sx={{ width: '100%', height: 'auto', marginTop: '1rem', borderRadius: '4px' }}
+                            sx={{
+                                width: '100%',
+                                height: 'auto',
+                                mt: 2,
+                                borderRadius: 2,
+                                boxShadow: 1,
+                                border: '1px solid',
+                                borderColor: 'divider',
+                            }}
                         />
                     </Grid2>
 
                     {/* Right Section - Customizable Details */}
-                    <Grid2>
+                    <Grid2 size={{xs: 12, md: 9}}>
                         <Grid2 container spacing={2}>
                             {details.map((detail, index) => (
-                                <Grid2 key={index} sx={detail.sx}>
-                                    <Typography fontWeight="bold">{detail.label}:</Typography>
-                                    <Typography>{detail.value}</Typography>
+                                <Grid2 size={{xs: 12, sm: 6}} key={index} sx={detail.sx}>
+                                    <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                                        {detail.label}:
+                                    </Typography>
+                                    <Typography variant="body1">{detail.value}</Typography>
                                 </Grid2>
                             ))}
                         </Grid2>
@@ -84,11 +99,19 @@ const ProductDetailsCollapse: React.FC<ProductDetailsCollapseProps> = ({
                 </Grid2>
 
                 {/* Action Buttons */}
-                <Box sx={{ display: 'flex', gap: 2, marginTop: '1rem', justifyContent: 'center' }}>
-                    <Button variant="contained" color="success" startIcon={<CheckIcon />}>Cập nhật</Button>
-                    <Button variant="outlined" startIcon={<PrintIcon />}>In mã vạch</Button>
-                    <Button variant="contained" color="primary" startIcon={<CheckIcon />}>Trạng thái kinh doanh</Button>
-                    <Button variant="contained" color="error" startIcon={<DeleteIcon />}>Xóa</Button>
+                <Box sx={{ display: 'flex', gap: 2, mt: 3, justifyContent: 'center' }}>
+                    <Button variant="contained" color="primary" startIcon={<CheckIcon />}>
+                        Cập nhật
+                    </Button>
+                    <Button variant="outlined" color="secondary" startIcon={<PrintIcon />}>
+                        In mã vạch
+                    </Button>
+                    <Button variant="contained" color="success" startIcon={<CheckIcon />}>
+                        Trạng thái kinh doanh
+                    </Button>
+                    <Button variant="contained" color="error" startIcon={<DeleteIcon />}>
+                        Xóa
+                    </Button>
                 </Box>
             </Box>
         </Box>

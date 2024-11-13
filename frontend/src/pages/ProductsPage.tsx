@@ -5,7 +5,7 @@ import SidebarFilter from "@/components/SidebarFilter.tsx";
 import Box from "@mui/material/Box";
 import HeaderActions from "@/components/HeaderAction.tsx";
 import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx"
-import AddTableDialog from "@/components/dialogs/AddTableDialog.tsx";
+import AddProductDialog from "@/components/dialogs/AddProductDialog.tsx";
 
 const productColumns = [
     {field: 'id', headerName: 'Mã hàng hóa', width: 150},
@@ -95,7 +95,7 @@ const ProductsPage = () => {
                     <Box sx={{padding: '2rem', flex: 1, overflow: 'auto'}}>
                         <HeaderActions text="Khach hang"
                                        DialogComponent={({ open, onClose }) => (
-                                           <AddTableDialog
+                                           <AddProductDialog
                                                open={open}
                                                onClose={onClose}
                                                onSave={(data) => console.log("Saved data:", data)}
