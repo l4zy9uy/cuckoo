@@ -21,7 +21,6 @@ app.use(
 );
 
 const db = require("./app/models");
-db.sequelize.sync();
 const Role = db.role;
 
 db.sequelize.sync({ force: true }).then(() => {
