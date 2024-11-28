@@ -1,5 +1,7 @@
 name: Cuckoo
-on: push
+on:
+  push:
+    branches: ["Don"]
 jobs:
   sample-job:
     runs-on: ubuntu-latest
