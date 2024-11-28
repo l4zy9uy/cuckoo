@@ -1,5 +1,4 @@
 // src/pages/BranchManagementPage.tsx
-import React from 'react';
 
 const BranchManagementPage = () => {
     return (

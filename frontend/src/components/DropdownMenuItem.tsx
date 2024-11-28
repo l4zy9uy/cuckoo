@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from "react";
+import React, {MutableRefObject, useCallback, useRef} from "react";
 import {
     Button, ListItemIcon,
     ListItemText,
@@ -8,7 +8,7 @@ import {
     Theme,
     useTheme
 } from "@mui/material";
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 
 export type whiteBarItem = {
@@ -31,7 +31,7 @@ const DropdownMenuItem = ({
     setMenuShowingDropdown: (menuTitle: string) => void;
 }) => {
     const theme = useTheme();
-    const { title, submenu } = menuItem;
+    const {title, submenu} = menuItem;
     const buttonRef = useRef<null | HTMLButtonElement>(null);
 
     const showSubMenu = useCallback(() => {
@@ -53,16 +53,19 @@ const DropdownMenuItem = ({
                     textDecoration: "none", // Remove underline from link
                 }}
             >
-                <ListItemIcon sx={{ color: "white" }}>{subMenuItem.icon}</ListItemIcon>
-                <ListItemText primary={subMenuItem.title} />
+                <ListItemIcon
+                    sx={{color: "white"}}>{subMenuItem.icon}</ListItemIcon>
+                <ListItemText primary={subMenuItem.title}/>
             </MenuItem>
         );
     });
 
     return (
+        // @ts-ignore
         <>
+
             <Button
-                ref={buttonRef}
+                ref={buttonRef as MutableRefObject<HTMLAnchorElement | null>}
                 component={Link}
                 to={menuItem.pathname || '#'}
                 onClick={() => {
@@ -72,7 +75,7 @@ const DropdownMenuItem = ({
                     setMenuShowingDropdown("");
                 }}
                 onMouseEnter={() => {
-                    if(menuItem.submenu) {
+                    if (menuItem.submenu) {
                         showSubMenu();
                         return;
                     }
@@ -110,8 +113,7 @@ const DropdownMenuItem = ({
                 MenuListProps={{
                     'aria-labelledby': 'branch-button',
                 }}
-                sx={{
-                }}
+                sx={{}}
             >
                 {subMenusNodes}
             </Menu>

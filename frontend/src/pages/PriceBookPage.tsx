@@ -1,5 +1,4 @@
 // src/pages/PriceBookPage.tsx
-import React from 'react';
 
 const PriceBookPage = () => {
     return (

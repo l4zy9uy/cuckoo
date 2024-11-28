@@ -1,5 +1,5 @@
 // src/components/AddTableDialog.tsx
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -22,7 +22,11 @@ type AddTableDialogProps = {
     onSave: (data: any) => void;
 };
 
-const AddTableDialog: React.FC<AddTableDialogProps> = ({ open, onClose, onSave }) => {
+const AddTableDialog: React.FC<AddTableDialogProps> = ({
+                                                           open,
+                                                           onClose,
+                                                           onSave
+                                                       }) => {
     const [formData, setFormData] = useState({
         name: '',
         area: '',
@@ -57,11 +61,12 @@ const AddTableDialog: React.FC<AddTableDialogProps> = ({ open, onClose, onSave }
                         color: (theme) => theme.palette.grey[500],
                     }}
                 >
-                    <CloseIcon />
+                    <CloseIcon/>
                 </IconButton>
             </DialogTitle>
             <DialogContent dividers>
-                <Box component="form" noValidate autoComplete="off" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box component="form" noValidate autoComplete="off"
+                     sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
                     <TextField
                         label="Tên phòng/bàn"
                         required
@@ -106,7 +111,8 @@ const AddTableDialog: React.FC<AddTableDialogProps> = ({ open, onClose, onSave }
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleSave} variant="contained" color="success">
+                <Button onClick={handleSave} variant="contained"
+                        color="success">
                     Lưu
                 </Button>
                 <Button onClick={onClose} variant="outlined">

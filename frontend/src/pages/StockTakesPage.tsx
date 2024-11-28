@@ -1,5 +1,4 @@
 // src/pages/StockTakesPage.tsx
-import React from 'react';
 
 const StockTakesPage = () => {
     return (

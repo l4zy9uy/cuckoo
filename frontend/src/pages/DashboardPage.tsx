@@ -42,7 +42,6 @@ const DashboardPage: React.FC = () => {
         ],
         monthly: (() => {
             const today = new Date();
-            const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
             const daysPassed = today.getDate();
             return Array.from({length: daysPassed}, (_, i) => ({
                 label: `${i + 1}`,

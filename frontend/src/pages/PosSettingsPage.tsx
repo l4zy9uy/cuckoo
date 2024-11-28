@@ -1,5 +1,4 @@
 // src/pages/StorePage.tsx
-import React from 'react';
 
 const PosSettingsPage = () => {
     return (

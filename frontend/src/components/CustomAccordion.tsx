@@ -16,7 +16,7 @@ type CustomAccordionProps = {
     items: { label: string }[]; // Define the structure of the accordion items
 };
 
-const CustomAccordion: React.FC<CustomAccordionProps> = ({ title, items }) => {
+const CustomAccordion: React.FC<CustomAccordionProps> = ({title, items}) => {
     return (
         <Accordion
             defaultExpanded
@@ -26,10 +26,10 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({ title, items }) => {
                 overflow: 'hidden',
                 marginBottom: '1rem',
                 boxShadow: 3,
-                '&:before': { display: 'none' }, // Remove divider
+                '&:before': {display: 'none'}, // Remove divider
             }}
         >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                 <Typography>{title}</Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -37,7 +37,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({ title, items }) => {
                     {items.map((item, index) => (
                         <FormControlLabel
                             key={index}
-                            control={<Checkbox />}
+                            control={<Checkbox/>}
                             label={item.label}
                         />
                     ))}

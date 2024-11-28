@@ -1,5 +1,4 @@
 // src/pages/KitchenPage.tsx
-import React from 'react';
 
 const KitchenPage = () => {
     return (

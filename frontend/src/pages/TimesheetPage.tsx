@@ -1,5 +1,4 @@
 // src/pages/TimesheetPage.tsx
-import React from 'react';
 
 const TimesheetPage = () => {
     return (

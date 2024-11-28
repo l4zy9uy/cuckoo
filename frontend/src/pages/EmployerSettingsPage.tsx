@@ -1,5 +1,4 @@
 // src/pages/EmployerSettingsPage.tsx
-import React from 'react';
 
 const EmployerSettingsPage = () => {
     return (

@@ -16,9 +16,10 @@ const tableColumns = [
 
 ];
 
-const tableRows = []
+const tableRows: any[] = []
 
 const CustomersPage = () => {
+    // @ts-ignore
     const [statusFilter, setStatusFilter] = useState('active');
 
     const handleStatusChange = (value: string) => {
@@ -45,7 +46,7 @@ const CustomersPage = () => {
                        sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                     <Box sx={{padding: '2rem', flex: 1, overflow: 'auto'}}>
                         <HeaderActions text="Khach hang"
-                                       DialogComponent={({ open, onClose }) => (
+                                       DialogComponent={({open, onClose}) => (
                                            <AddCustomerDialog
                                                open={open}
                                                onClose={onClose}
@@ -59,16 +60,53 @@ const CustomersPage = () => {
                                              productName={row.name}
                                              imageUrl={row.imageUrl}
                                              details={[
-                                                 { label: "Mã hàng hóa", value: row.code },
-                                                 { label: "Loại thực đơn", value: row.menuType },
-                                                 { label: "Nhóm hàng", value: row.category },
-                                                 { label: "Loại hàng", value: row.itemType },
-                                                 { label: "Định mức tồn", value: row.stockLimit, sx: { color: 'blue' } },
-                                                 { label: "Giá bán", value: row.price, sx: { fontWeight: 'bold', color: 'green' } },
-                                                 { label: "Giá vốn", value: row.cost, sx: { color: 'red' } },
-                                                 { label: "Trọng lượng", value: row.weight },
-                                                 { label: "Mô tả", value: row.description, sx: { fontStyle: 'italic' } },
-                                                 { label: "Ghi chú đặt hàng", value: row.orderNote },
+                                                 {
+                                                     label: "Mã hàng ",
+                                                     value: row.code
+                                                 },
+                                                 {
+                                                     label: "Loại thực đơn",
+                                                     value: row.menuType
+                                                 },
+                                                 {
+                                                     label: "Nhóm hàng",
+                                                     value: row.category
+                                                 },
+                                                 {
+                                                     label: "Loại hàng",
+                                                     value: row.itemType
+                                                 },
+                                                 {
+                                                     label: "Định mức tồn",
+                                                     value: row.stockLimit,
+                                                     sx: {color: 'blue'}
+                                                 },
+                                                 {
+                                                     label: "Giá bán",
+                                                     value: row.price,
+                                                     sx: {
+                                                         fontWeight: 'bold',
+                                                         color: 'green'
+                                                     }
+                                                 },
+                                                 {
+                                                     label: "Giá vốn",
+                                                     value: row.cost,
+                                                     sx: {color: 'red'}
+                                                 },
+                                                 {
+                                                     label: "Trọng lượng",
+                                                     value: row.weight
+                                                 },
+                                                 {
+                                                     label: "Mô tả",
+                                                     value: row.description,
+                                                     sx: {fontStyle: 'italic'}
+                                                 },
+                                                 {
+                                                     label: "Ghi chú đặt hàng",
+                                                     value: row.orderNote
+                                                 },
                                              ]}
                                          />
                                      )}/>

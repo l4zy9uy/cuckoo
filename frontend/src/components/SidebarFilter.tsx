@@ -1,6 +1,14 @@
 // src/components/SidebarFilter.tsx
 import React from 'react';
-import { Box, Typography, TextField, Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material';
+import {
+    Box,
+    Typography,
+    TextField,
+    Radio,
+    RadioGroup,
+    FormControlLabel,
+    FormControl
+} from '@mui/material';
 import CustomAccordion from './CustomAccordion';
 
 type AccordionItem = {
@@ -62,7 +70,7 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
 
             {/* Status Filter */}
             {statusFilterOptions.length > 0 && (
-                <FormControl component="fieldset" sx={{ marginTop: '1rem' }}>
+                <FormControl component="fieldset" sx={{marginTop: '1rem'}}>
                     <Typography variant="subtitle1">Trạng thái</Typography>
                     <RadioGroup
                         defaultValue={statusFilterOptions[0].value}
@@ -72,7 +80,8 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
                             <FormControlLabel
                                 key={option.value}
                                 value={option.value}
-                                control={<Radio sx={{ color: option.color || 'default' }} />}
+                                control={<Radio
+                                    sx={{color: option.color || 'default'}}/>}
                                 label={option.label}
                             />
                         ))}
@@ -82,7 +91,8 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
 
             {/* Accordion Filters */}
             {accordionData && accordionData.map((accordion, index) => (
-                <CustomAccordion key={index} title={accordion.title} items={accordion.items} />
+                <CustomAccordion key={index} title={accordion.title}
+                                 items={accordion.items}/>
             ))}
         </Box>
     );

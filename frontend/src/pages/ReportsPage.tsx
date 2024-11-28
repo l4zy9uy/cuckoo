@@ -1,5 +1,4 @@
 // src/pages/ReportsPage.tsx
-import React from 'react';
 
 const ReportsPage = () => {
     return (

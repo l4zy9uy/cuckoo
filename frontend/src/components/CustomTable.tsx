@@ -1,5 +1,5 @@
 // src/components/ProductTable.tsx
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
     Paper,
     Table,
@@ -18,12 +18,22 @@ import {
 
 type CustomTableProps = {
     rows: any[];
-    columns: { field: string; headerName: string , width?: number, flexGrow?: number }[];
+    columns: {
+        field: string;
+        headerName: string,
+        width?: number,
+        flexGrow?: number
+    }[];
     pageSizeOptions?: number[]; // Options for page sizes
     renderCollapse?: (row: any) => React.ReactNode;
 };
 
-const CustomTable: React.FC<CustomTableProps> = ({ rows, columns, pageSizeOptions = [5, 10, 25], renderCollapse, }) => {
+const CustomTable: React.FC<CustomTableProps> = ({
+                                                     rows,
+                                                     columns,
+                                                     pageSizeOptions = [5, 10, 25],
+                                                     renderCollapse,
+                                                 }) => {
     const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
     const [order, setOrder] = useState<'asc' | 'desc'>('asc');
     const [orderBy, setOrderBy] = useState<string | null>(null);
@@ -86,7 +96,8 @@ const CustomTable: React.FC<CustomTableProps> = ({ rows, columns, pageSizeOption
     };
 
     return (
-        <TableContainer component={Paper} style={{ maxHeight: 400, width: '100%' }}>
+        <TableContainer component={Paper}
+                        style={{maxHeight: 400, width: '100%'}}>
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>
@@ -131,7 +142,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ rows, columns, pageSizeOption
                                 <TableRow
                                     selected={selectedRows.has(globalIndex)}
                                     onClick={() => handleExpandClick(globalIndex)}
-                                    sx={{ cursor: 'pointer' }} // Change cursor to indicate clickability
+                                    sx={{cursor: 'pointer'}} // Change cursor to indicate clickability
                                 >
                                     <TableCell padding="checkbox">
                                         <Checkbox
@@ -147,8 +158,13 @@ const CustomTable: React.FC<CustomTableProps> = ({ rows, columns, pageSizeOption
                                     ))}
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={columns.length + 1}>
-                                        <Collapse in={expandedRows.has(globalIndex)} timeout="auto" unmountOnExit>
+                                    <TableCell style={{
+                                        paddingBottom: 0,
+                                        paddingTop: 0
+                                    }} colSpan={columns.length + 1}>
+                                        <Collapse
+                                            in={expandedRows.has(globalIndex)}
+                                            timeout="auto" unmountOnExit>
                                             {renderCollapse && renderCollapse(row)}
                                         </Collapse>
                                     </TableCell>

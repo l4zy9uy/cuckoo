@@ -1,5 +1,5 @@
 // src/LoginPage.js
-import { Grid2, Typography, TextField, Button, Box } from '@mui/material';
+import {Grid2, Typography, TextField, Button, Box} from '@mui/material';
 import loginImage from '../assets/login_image.jpg';
 
 const Login = () => {
@@ -31,7 +31,7 @@ const Login = () => {
                     How to get started lorem ipsum dolor at?
                 </Typography>
 
-                <Box component="form" sx={{ width: '80%', maxWidth: '400px' }}>
+                <Box component="form" sx={{width: '80%', maxWidth: '400px'}}>
                     <TextField
                         variant="outlined"
                         fullWidth

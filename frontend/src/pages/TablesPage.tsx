@@ -17,15 +17,18 @@ const tableColumns = [
     {field: 'order', headerName: 'So thu tu', width: 150},
 ];
 
+// @ts-ignore
 const tableRows = []
 
 const TablesPage = () => {
+    // @ts-ignore
     const [statusFilter, setStatusFilter] = useState('active');
 
     const handleStatusChange = (value: string) => {
         setStatusFilter(value);
         // Additional logic for filtering rows based on status can go here
     };
+    // @ts-ignore
     return (
         <Grid2 container spacing={2} sx={{height: '100vh', padding: '1rem'}}>
             {/* Sidebar */}
@@ -35,9 +38,17 @@ const TablesPage = () => {
                         title="Tìm kiếm"
                         searchPlaceholder="Theo tên phòng/bàn"
                         statusFilterOptions={[
-                            { label: 'Đang hoạt động', value: 'active', color: 'green' },
-                            { label: 'Ngừng hoạt động', value: 'inactive', color: 'red' },
-                            { label: 'Tất cả', value: 'all' },
+                            {
+                                label: 'Đang hoạt động',
+                                value: 'active',
+                                color: 'green'
+                            },
+                            {
+                                label: 'Ngừng hoạt động',
+                                value: 'inactive',
+                                color: 'red'
+                            },
+                            {label: 'Tất cả', value: 'all'},
                         ]}
                         onStatusChange={handleStatusChange}
                     />
@@ -52,7 +63,7 @@ const TablesPage = () => {
                     <Box sx={{padding: '2rem', flex: 1, overflow: 'auto'}}>
                         <HeaderActions
                             text="Phòng/Bàn"
-                            DialogComponent={({ open, onClose }) => (
+                            DialogComponent={({open, onClose}) => (
                                 <AddTableDialog
                                     open={open}
                                     onClose={onClose}
@@ -60,6 +71,7 @@ const TablesPage = () => {
                                 />
                             )}
                         />
+                        {/*@ts-ignore*/}
                         <CustomTable rows={tableRows}
                                      columns={tableColumns}
                                      renderCollapse={(row) => (
@@ -67,16 +79,53 @@ const TablesPage = () => {
                                              productName={row.name}
                                              imageUrl={row.imageUrl}
                                              details={[
-                                                 { label: "Mã hàng hóa", value: row.code },
-                                                 { label: "Loại thực đơn", value: row.menuType },
-                                                 { label: "Nhóm hàng", value: row.category },
-                                                 { label: "Loại hàng", value: row.itemType },
-                                                 { label: "Định mức tồn", value: row.stockLimit, sx: { color: 'blue' } },
-                                                 { label: "Giá bán", value: row.price, sx: { fontWeight: 'bold', color: 'green' } },
-                                                 { label: "Giá vốn", value: row.cost, sx: { color: 'red' } },
-                                                 { label: "Trọng lượng", value: row.weight },
-                                                 { label: "Mô tả", value: row.description, sx: { fontStyle: 'italic' } },
-                                                 { label: "Ghi chú đặt hàng", value: row.orderNote },
+                                                 {
+                                                     label: "Mã hàng hóa",
+                                                     value: row.code
+                                                 },
+                                                 {
+                                                     label: "Loại thực đơn",
+                                                     value: row.menuType
+                                                 },
+                                                 {
+                                                     label: "Nhóm hàng",
+                                                     value: row.category
+                                                 },
+                                                 {
+                                                     label: "Loại hàng",
+                                                     value: row.itemType
+                                                 },
+                                                 {
+                                                     label: "Định mức tồn",
+                                                     value: row.stockLimit,
+                                                     sx: {color: 'blue'}
+                                                 },
+                                                 {
+                                                     label: "Giá bán",
+                                                     value: row.price,
+                                                     sx: {
+                                                         fontWeight: 'bold',
+                                                         color: 'green'
+                                                     }
+                                                 },
+                                                 {
+                                                     label: "Giá vốn",
+                                                     value: row.cost,
+                                                     sx: {color: 'red'}
+                                                 },
+                                                 {
+                                                     label: "Trọng lượng",
+                                                     value: row.weight
+                                                 },
+                                                 {
+                                                     label: "Mô tả",
+                                                     value: row.description,
+                                                     sx: {fontStyle: 'italic'}
+                                                 },
+                                                 {
+                                                     label: "Ghi chú đặt hàng",
+                                                     value: row.orderNote
+                                                 },
                                              ]}
                                          />
                                      )}/>

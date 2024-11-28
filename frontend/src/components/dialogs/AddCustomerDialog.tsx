@@ -57,7 +57,7 @@ const CustomerDialog: React.FC<CustomerDialogProps> = ({
                 <Box sx={{
                     width: '100%',
                     display: 'grid',
-                    gridTemplateColumns: '1fr 2fr',  // First column is 1x, second column is 2x
+                    gridTemplateColumns: '1fr 2fr',
                     gap: 2
                 }}>
                     <TextField

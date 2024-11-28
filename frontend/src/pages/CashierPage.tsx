@@ -1,5 +1,4 @@
 // src/pages/CashierPage.tsx
-import React from 'react';
 
 const CashierPage = () => {
     return (

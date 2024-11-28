@@ -1,5 +1,4 @@
 // src/pages/ReceptionPage.tsx
-import React from 'react';
 
 const ReceptionPage = () => {
     return (

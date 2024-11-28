@@ -1,5 +1,4 @@
 // src/pages/OperationHistoryPage.tsx
-import React from 'react';
 
 const OperationHistoryPage = () => {
     return (

@@ -1,5 +1,4 @@
 // src/pages/PurchaseOrderPage.tsx
-import React from 'react';
 
 const PurchaseOrderPage = () => {
     return (

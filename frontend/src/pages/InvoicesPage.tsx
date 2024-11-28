@@ -1,5 +1,4 @@
 // src/pages/InvoicesPage.tsx
-import React from 'react';
 
 const InvoicesPage = () => {
     return (
