@@ -23,7 +23,7 @@ const App: React.FC = () => {
 
 const WrappedApp: React.FC = () => {
     return (
-        <Router>
+        <Router basename="/cuckoo">
             <App />
         </Router>
     );
