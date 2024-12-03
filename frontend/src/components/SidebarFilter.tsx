@@ -1,5 +1,5 @@
 // src/components/SidebarFilter.tsx
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Box,
     Typography,
@@ -26,6 +26,8 @@ type SidebarFilterProps = {
     accordionData?: AccordionData[];
     statusFilterOptions?: { label: string; value: string; color?: string }[];
     onStatusChange?: (value: string) => void;
+    onSearchChange?: (value: string) => void;
+    onAccordionFilterChange?: (filters: Record<string, string[]>) => void;
 };
 
 const SidebarFilter: React.FC<SidebarFilterProps> = ({
@@ -34,7 +36,19 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
                                                          accordionData = [],
                                                          statusFilterOptions = [],
                                                          onStatusChange,
+                                                         onSearchChange,
+                                                         onAccordionFilterChange,
                                                      }) => {
+    const [accordionFilters, setAccordionFilters] = useState<Record<string, string[]>>({});
+
+    const handleAccordionChange = (title: string, values: string[]) => {
+        const updatedFilters = { ...accordionFilters, [title]: values };
+        setAccordionFilters(updatedFilters);
+
+        // Notify parent component about the updated filters
+        onAccordionFilterChange && onAccordionFilterChange(updatedFilters);
+    };
+
     return (
         <Box
             sx={{
@@ -58,6 +72,7 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
                 fullWidth
                 placeholder={searchPlaceholder}
                 margin="normal"
+                onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
                 sx={{
                     '& .MuiOutlinedInput-root': {
                         borderRadius: '12px',
@@ -91,8 +106,11 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
 
             {/* Accordion Filters */}
             {accordionData && accordionData.map((accordion, index) => (
-                <CustomAccordion key={index} title={accordion.title}
-                                 items={accordion.items}/>
+                <CustomAccordion key={index}
+                                 title={accordion.title}
+                                 items={accordion.items}
+                                 onFilterChange={(selectedItems) => handleAccordionChange(accordion.title, selectedItems)}
+                />
             ))}
         </Box>
     );

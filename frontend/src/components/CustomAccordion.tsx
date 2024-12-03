@@ -1,5 +1,4 @@
-// src/components/CustomAccordion.tsx
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Accordion,
     AccordionSummary,
@@ -14,9 +13,28 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 type CustomAccordionProps = {
     title: string;
     items: { label: string }[]; // Define the structure of the accordion items
+    onFilterChange?: (selectedItems: string[]) => void; // Callback for selected filters
 };
 
-const CustomAccordion: React.FC<CustomAccordionProps> = ({title, items}) => {
+const CustomAccordion: React.FC<CustomAccordionProps> = ({
+                                                             title,
+                                                             items,
+                                                             onFilterChange
+                                                         }) => {
+    //  track selected items.
+
+
+    const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+    const handleCheckboxChange = (label: string) => {
+        const updatedSelectedItems = selectedItems.includes(label)
+            ? selectedItems.filter((item) => item !== label) // Remove item if already selected
+            : [...selectedItems, label]; // Add item if not selected
+
+        setSelectedItems(updatedSelectedItems);
+        onFilterChange && onFilterChange(updatedSelectedItems); // Notify parent of changes
+    };
+
     return (
         <Accordion
             defaultExpanded
@@ -37,7 +55,12 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({title, items}) => {
                     {items.map((item, index) => (
                         <FormControlLabel
                             key={index}
-                            control={<Checkbox/>}
+                            control={
+                                <Checkbox
+                                    checked={selectedItems.includes(item.label)}
+                                    onChange={() => handleCheckboxChange(item.label)}
+                                />
+                            }
                             label={item.label}
                         />
                     ))}

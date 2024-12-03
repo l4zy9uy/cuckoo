@@ -1,5 +1,4 @@
-// src/components/ProductTable.tsx
-import React, {useState} from 'react';
+import React, { useState, useMemo } from 'react';
 import {
     Paper,
     Table,
@@ -15,17 +14,18 @@ import {
     TablePagination,
 } from '@mui/material';
 
+type Column = {
+    field: string;
+    headerName: string;
+    width?: number;
+    flexGrow?: number;
+};
 
 type CustomTableProps = {
-    rows: any[];
-    columns: {
-        field: string;
-        headerName: string,
-        width?: number,
-        flexGrow?: number
-    }[];
+    rows: Record<string, any>[]; // Each row is an object with key-value pairs
+    columns: Column[];
     pageSizeOptions?: number[]; // Options for page sizes
-    renderCollapse?: (row: any) => React.ReactNode;
+    renderCollapse?: (row: Record<string, any>) => React.ReactNode; // Callback for rendering collapsible content
 };
 
 const CustomTable: React.FC<CustomTableProps> = ({
@@ -41,15 +41,9 @@ const CustomTable: React.FC<CustomTableProps> = ({
     const [rowsPerPage, setRowsPerPage] = useState(pageSizeOptions[0]);
     const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
 
-    const handleSort = (field: string) => {
-        const isAsc = orderBy === field && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(field);
-    };
-
-    const sortedRows = React.useMemo(() => {
+    // Sorting logic
+    const sortedRows = useMemo(() => {
         if (!orderBy) return rows;
-        //shallow copy
         return [...rows].sort((a, b) => {
             const aValue = a[orderBy];
             const bValue = b[orderBy];
@@ -59,8 +53,20 @@ const CustomTable: React.FC<CustomTableProps> = ({
         });
     }, [rows, order, orderBy]);
 
-    const paginatedRows = sortedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    // Pagination logic
+    const paginatedRows = useMemo(
+        () => sortedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+        [sortedRows, page, rowsPerPage]
+    );
 
+    // Handle sorting
+    const handleSort = (field: string) => {
+        const isAsc = orderBy === field && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(field);
+    };
+
+    // Handle row selection
     const handleCheckboxChange = (rowIndex: number) => {
         setSelectedRows((prevSelectedRows) => {
             const newSelectedRows = new Set(prevSelectedRows);
@@ -73,6 +79,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
         });
     };
 
+    // Handle expand/collapse of rows
     const handleExpandClick = (rowIndex: number) => {
         setExpandedRows((prevExpandedRows) => {
             const newExpandedRows = new Set(prevExpandedRows);
@@ -85,22 +92,22 @@ const CustomTable: React.FC<CustomTableProps> = ({
         });
     };
 
-    // @ts-ignore
-    const handleChangePage = (event: unknown, newPage: number) => {
+    const handleChangePage = (_: unknown, newPage: number) => {
         setPage(newPage);
     };
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0); // Reset page when changing rows per page
+        setPage(0); // Reset page to the first when changing rows per page
     };
 
     return (
-        <TableContainer component={Paper}
-                        style={{maxHeight: 400, width: '100%'}}>
+        <TableContainer component={Paper} style={{ maxHeight: 400, width: '100%' }}>
             <Table stickyHeader>
+                {/* Table Header */}
                 <TableHead>
                     <TableRow>
+                        {/* Select All Checkbox */}
                         <TableCell padding="checkbox">
                             <Checkbox
                                 indeterminate={selectedRows.size > 0 && selectedRows.size < rows.length}
@@ -114,6 +121,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                                 }}
                             />
                         </TableCell>
+                        {/* Columns */}
                         {columns.map((column) => (
                             <TableCell
                                 key={column.field}
@@ -134,45 +142,57 @@ const CustomTable: React.FC<CustomTableProps> = ({
                         ))}
                     </TableRow>
                 </TableHead>
+
+                {/* Table Body */}
                 <TableBody>
                     {paginatedRows.map((row, rowIndex) => {
                         const globalIndex = page * rowsPerPage + rowIndex;
                         return (
                             <React.Fragment key={globalIndex}>
+                                {/* Main Row */}
                                 <TableRow
                                     selected={selectedRows.has(globalIndex)}
-                                    onClick={() => handleExpandClick(globalIndex)}
-                                    sx={{cursor: 'pointer'}} // Change cursor to indicate clickability
+                                    sx={{ cursor: renderCollapse ? 'pointer' : 'default' }}
+                                    onClick={() => renderCollapse && handleExpandClick(globalIndex)}
                                 >
+                                    {/* Checkbox */}
                                     <TableCell padding="checkbox">
                                         <Checkbox
                                             checked={selectedRows.has(globalIndex)}
                                             onChange={() => handleCheckboxChange(globalIndex)}
-                                            onClick={(e) => e.stopPropagation()} // Prevent row click when checking checkbox
+                                            onClick={(e) => e.stopPropagation()} // Prevent row click when toggling checkbox
                                         />
                                     </TableCell>
+                                    {/* Columns */}
                                     {columns.map((column) => (
                                         <TableCell key={column.field}>
                                             {row[column.field]}
                                         </TableCell>
                                     ))}
                                 </TableRow>
-                                <TableRow>
-                                    <TableCell style={{
-                                        paddingBottom: 0,
-                                        paddingTop: 0
-                                    }} colSpan={columns.length + 1}>
-                                        <Collapse
-                                            in={expandedRows.has(globalIndex)}
-                                            timeout="auto" unmountOnExit>
-                                            {renderCollapse && renderCollapse(row)}
-                                        </Collapse>
-                                    </TableCell>
-                                </TableRow>
+                                {/* Collapsible Row */}
+                                {renderCollapse && (
+                                    <TableRow>
+                                        <TableCell
+                                            style={{ paddingBottom: 0, paddingTop: 0 }}
+                                            colSpan={columns.length + 1}
+                                        >
+                                            <Collapse
+                                                in={expandedRows.has(globalIndex)}
+                                                timeout="auto"
+                                                unmountOnExit
+                                            >
+                                                {renderCollapse(row)}
+                                            </Collapse>
+                                        </TableCell>
+                                    </TableRow>
+                                )}
                             </React.Fragment>
                         );
                     })}
                 </TableBody>
+
+                {/* Table Footer */}
                 <TableFooter>
                     <TableRow>
                         <TablePagination
