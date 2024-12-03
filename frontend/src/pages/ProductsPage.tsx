@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import HeaderActions from "@/components/HeaderAction.tsx";
 import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx"
 import AddProductDialog from "@/components/dialogs/AddProductDialog.tsx";
+import {useEffect, useState} from "react";
 
 const productColumns = [
     {field: 'id', headerName: 'Mã hàng hóa', width: 150},
@@ -15,7 +16,16 @@ const productColumns = [
     {field: 'stock', headerName: 'Tồn kho', width: 120},
 ];
 
-const productRows = [
+type Row = {
+    id: string;
+    name: string;
+    type: string;
+    price: string; // Representing a formatted number as a string
+    stock: string; // Representing a formatted number as a string
+};
+
+
+const productRows: Row[] = [
     {
         id: 'SP000023',
         name: 'Thuốc lá Vinataba',
@@ -64,16 +74,64 @@ const accordionData = [
             {label: 'Combo - Đóng gói'},
         ],
     },
-    {
-        title: 'Nhóm hàng',
-        items: [
-            {label: 'Sản phẩm mới'},
-            {label: 'Sản phẩm nổi bật'},
-        ],
-    },
 ];
 
+type Filters = {
+    search: string;
+    accordion: Record<string, string[]>; // Accordion filters: key-value pairs where values are string arrays
+};
+
 const ProductsPage = () => {
+    const [filters, setFilters] = useState<Filters>({
+        search: "", // For search input
+        accordion: {}, // For accordion filters
+    });
+
+    const [filteredRows, setFilteredRows] = useState(productRows);
+
+    const handleSearchChange = (value: string) => {
+        setFilters((prev) => ({ ...prev, search: value }));
+    };
+
+    const handleAccordionFilterChange = (accordionFilters: Record<string, string[]>) => {
+        setFilters((prev) => ({ ...prev, accordion: accordionFilters }));
+    };
+
+    useEffect(() => {
+        // Filter the rows based on search and accordion filters
+        const { search, accordion } = filters;
+        let filtered = productRows;
+
+        // Apply search filter
+        if (search) {
+            filtered = filtered.filter((row) =>
+                Object.values(row).some((val) =>
+                    val.toString().toLowerCase().includes(search.toLowerCase())
+                )
+            );
+        }
+
+        const accordionKeyMap: Record<string, keyof Row> = {
+            "Loại thực đơn": "type",
+            "Loại hàng": "name", // Adjust based on actual filter categories
+            // Add other mappings as needed
+        };
+
+        // Apply accordion filters
+        Object.entries(accordion).forEach(([key, values]) => {
+            const rowKey = accordionKeyMap[key]; // Map the accordion key to the corresponding Row key
+            if (rowKey && values.length > 0) {
+                filtered = filtered.filter((row) => {
+                    const value = row[rowKey];
+                    return values.includes(value);
+                });
+            }
+        });
+
+        setFilteredRows(filtered);
+    }, [filters]);
+
+
     return (
         <Grid2 container spacing={2} sx={{height: '100vh', padding: '1rem'}}>
             {/* Sidebar */}
@@ -83,6 +141,8 @@ const ProductsPage = () => {
                         title="Tìm kiếm"
                         searchPlaceholder="Theo mã, tên hàng"
                         accordionData={accordionData}
+                        onSearchChange={handleSearchChange}
+                        onAccordionFilterChange={handleAccordionFilterChange}
                     />
                 </Paper>
             </Grid2>
@@ -102,7 +162,7 @@ const ProductsPage = () => {
                                            />
                                        )}
                         />
-                        <CustomTable rows={productRows}
+                        <CustomTable rows={filteredRows}
                                      columns={productColumns}
                                      renderCollapse={(row) => (
                                          <ProductDetailsCollapse
