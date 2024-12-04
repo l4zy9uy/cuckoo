@@ -26,12 +26,19 @@ db.sequelize = sequelize;
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
 db.refreshToken = require("../models/refreshToken.model.js")(sequelize, Sequelize);
-db.branch = require("../models/branch.model.js")(sequelize, Sequelize); // Added Branch model
-db.table = require("../models/table.model.js")(sequelize, Sequelize); // Added Table model
-db.customer = require("../models/customer.model.js")(sequelize, Sequelize); // Added Customer model
-db.employee = require("../models/employee.model.js")(sequelize, Sequelize); // Added Employee model
+db.branch = require("../models/branch.model.js")(sequelize, Sequelize);
+db.table = require("../models/table.model.js")(sequelize, Sequelize);
+db.customer = require("../models/customer.model.js")(sequelize, Sequelize);
+db.employee = require("../models/employee.model.js")(sequelize, Sequelize);  // Updated path for Employee model
+db.menu = require("../models/menu.model.js")(sequelize, Sequelize);  // Added Menu model
+db.order = require("../models/order.model.js")(sequelize, Sequelize);  // Added Order model
+db.orderItem = require("../models/order_item.model.js")(sequelize, Sequelize);  // Added OrderItem model
+db.supplier = require("../models/supplier.model.js")(sequelize, Sequelize);  // Added Supplier model
+db.inventory = require("../models/inventory.model.js")(sequelize, Sequelize);  // Added Inventory model
 
 // Define relationships
+
+// User and Role relationships
 db.role.belongsToMany(db.user, {
     through: "user_roles",
     foreignKey: "roleId",
@@ -51,7 +58,7 @@ db.user.hasOne(db.refreshToken, {
     foreignKey: 'userId', targetKey: 'id'
 });
 
-// Define foreign key relationships for other models
+// Branch and Table relationships
 db.branch.hasMany(db.table, {
     foreignKey: 'branch_id',
     onDelete: 'CASCADE'
@@ -60,6 +67,7 @@ db.table.belongsTo(db.branch, {
     foreignKey: 'branch_id'
 });
 
+// Branch and Customer relationships
 db.branch.hasMany(db.customer, {
     foreignKey: 'branch_id',
     onDelete: 'SET NULL'
@@ -68,6 +76,7 @@ db.customer.belongsTo(db.branch, {
     foreignKey: 'branch_id'
 });
 
+// Branch and Employee relationships
 db.branch.hasMany(db.employee, {
     foreignKey: 'branch_id',
     onDelete: 'CASCADE'
@@ -76,6 +85,56 @@ db.employee.belongsTo(db.branch, {
     foreignKey: 'branch_id'
 });
 
-db.ROLES = ["user", "admin", "moderator"];
+// Branch and Menu relationships
+db.branch.hasMany(db.menu, {
+    foreignKey: 'branch_id',
+    onDelete: 'CASCADE'
+});
+db.menu.belongsTo(db.branch, {
+    foreignKey: 'branch_id'
+});
 
-module.exports = db;
+// Order and relationships
+db.branch.hasMany(db.order, {
+    foreignKey: 'branch_id',
+    onDelete: 'SET NULL'
+});
+db.order.belongsTo(db.branch, {
+    foreignKey: 'branch_id'
+});
+
+db.employee.hasMany(db.order, {
+    foreignKey: 'employee_id',
+    onDelete: 'CASCADE'
+});
+db.order.belongsTo(db.employee, {
+    foreignKey: 'employee_id'
+});
+
+db.customer.hasMany(db.order, {
+    foreignKey: 'customer_id',
+    onDelete: 'SET NULL'
+});
+db.order.belongsTo(db.customer, {
+    foreignKey: 'customer_id'
+});
+
+// Order and OrderItems relationships
+db.order.hasMany(db.orderItem, {
+    foreignKey: 'order_id',
+    onDelete: 'CASCADE'
+});
+db.orderItem.belongsTo(db.order, {
+    foreignKey: 'order_id'
+});
+
+db.menu.hasMany(db.orderItem, {
+    foreignKey: 'menu_id',
+    onDelete: 'CASCADE'
+});
+db.orderItem.belongsTo(db.menu, {
+    foreignKey: 'menu_id'
+});
+
+// Supplier and Inventory relationships
+db.supplier.hasMa
