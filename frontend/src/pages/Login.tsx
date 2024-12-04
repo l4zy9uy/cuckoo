@@ -2,32 +2,40 @@
 import {Grid2, Typography, TextField, Button, Box} from '@mui/material';
 import loginImage from '../assets/login_image.jpg';
 import axios from 'axios';
-import {useState} from "react";
+import React, {useState} from "react";
 import { useNavigate } from 'react-router-dom';  // Import useNavigate for redirection
 
+// Define the types for the state
+interface LoginFormData {
+    username: string;
+    password: string;
+    errorMessage: string;
+}
 
 const Login = () => {
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [formData, setFormData] = useState<LoginFormData>({
+        username: '',
+        password: '',
+        errorMessage: ''
+    });
 
     const navigate = useNavigate();
 
     // Handle form submission
-    const handleLogin = async (e) => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
             // Make the API call to the backend for authentication
+            console.log(formData);
             const response = await axios.post('http://localhost:3001/api/auth/signin', {
-                username,
-                password,
+                username: formData.username,
+                password: formData.password,
             });
 
             // If successful, store the user data or token as needed
             const { data } = response;
-
             console.log('Login successful', data);
 
             // For example, you might store the token in localStorage or in a context
@@ -35,13 +43,24 @@ const Login = () => {
 
             navigate('/'); // This will redirect to the root page
 
-            // Redirect user after successful login (optional)
-            // Example: window.location.href = '/dashboard';
         } catch (error) {
             // Handle error
             console.error('Login failed', error);
-            setErrorMessage('Invalid credentials, please try again.');
+            setFormData(prev => ({
+                ...prev,
+                errorMessage: 'Invalid credentials, please try again.'
+            }));
         }
+    };
+
+    // Handle input change
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        console.log(e);
+        setFormData(prev => ({
+            ...prev,
+            [name]: value,
+        }));
     };
 
     return (
@@ -78,7 +97,8 @@ const Login = () => {
                         fullWidth
                         placeholder="Username"
                         margin="normal"
-                        onChange={(e) => setUsername(e.target.value)}
+                        name="username"
+                        onChange={handleChange}
                     />
                     <TextField
                         type="password"
@@ -86,12 +106,13 @@ const Login = () => {
                         fullWidth
                         placeholder="Password"
                         margin="normal"
-                        onChange={(e) => setPassword(e.target.value)}
+                        name="password"
+                        onChange={handleChange}
                     />
 
-                    {errorMessage && (
+                    {formData.errorMessage && (
                         <Typography color="error" sx={{ marginTop: '1rem' }}>
-                            {errorMessage}
+                            {formData.errorMessage}
                         </Typography>
                     )}
 
