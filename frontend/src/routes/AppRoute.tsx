@@ -4,7 +4,7 @@ import DashboardPage from '../pages/DashboardPage';
 import ProfilePage from '../pages/ProfilePage';
 import SettingsPage from '../pages/SettingsPage';
 import TableAndRoom from '../pages/TablesPage';
-import Login from '@/components/Login';
+import Login from '@/pages/Login.tsx';
 import ProductsPage from '../pages/ProductsPage';
 import PriceBookPage from '../pages/PriceBookPage';
 import StockTakesPage from '../pages/StockTakesPage';

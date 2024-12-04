@@ -1,8 +1,49 @@
 // src/LoginPage.js
 import {Grid2, Typography, TextField, Button, Box} from '@mui/material';
 import loginImage from '../assets/login_image.jpg';
+import axios from 'axios';
+import {useState} from "react";
+import { useNavigate } from 'react-router-dom';  // Import useNavigate for redirection
+
 
 const Login = () => {
+
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const navigate = useNavigate();
+
+    // Handle form submission
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        try {
+            // Make the API call to the backend for authentication
+            const response = await axios.post('http://localhost:3001/api/auth/signin', {
+                username,
+                password,
+            });
+
+            // If successful, store the user data or token as needed
+            const { data } = response;
+
+            console.log('Login successful', data);
+
+            // For example, you might store the token in localStorage or in a context
+            localStorage.setItem('token', data.token);
+
+            navigate('/'); // This will redirect to the root page
+
+            // Redirect user after successful login (optional)
+            // Example: window.location.href = '/dashboard';
+        } catch (error) {
+            // Handle error
+            console.error('Login failed', error);
+            setErrorMessage('Invalid credentials, please try again.');
+        }
+    };
+
     return (
         <Grid2
             container
@@ -31,12 +72,13 @@ const Login = () => {
                     How to get started lorem ipsum dolor at?
                 </Typography>
 
-                <Box component="form" sx={{width: '80%', maxWidth: '400px'}}>
+                <Box component="form" sx={{width: '80%', maxWidth: '400px'}} onSubmit={handleLogin}>
                     <TextField
                         variant="outlined"
                         fullWidth
                         placeholder="Username"
                         margin="normal"
+                        onChange={(e) => setUsername(e.target.value)}
                     />
                     <TextField
                         type="password"
@@ -44,9 +86,18 @@ const Login = () => {
                         fullWidth
                         placeholder="Password"
                         margin="normal"
+                        onChange={(e) => setPassword(e.target.value)}
                     />
+
+                    {errorMessage && (
+                        <Typography color="error" sx={{ marginTop: '1rem' }}>
+                            {errorMessage}
+                        </Typography>
+                    )}
+
                     <Button
                         variant="contained"
+                        type="submit"
                         fullWidth
                         sx={{
                             marginTop: '1rem',
