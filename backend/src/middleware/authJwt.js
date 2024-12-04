@@ -3,8 +3,21 @@ const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.user;
 
-verifyToken = (req, res, next) => {
-    let token = req.session.token;
+const { TokenExpiredError } = jwt;
+
+const catchError = (err, res) => {
+    if (err instanceof TokenExpiredError) {
+        return res.status(401).send({ message: "Unauthorized! Access Token was expired!" });
+    }
+
+    return res.sendStatus(401).send({ message: "Unauthorized!" });
+}
+
+// Remove the second declaration of verifyToken here
+
+// The first declaration is sufficient
+const verifyToken = (req, res, next) => {
+    let token = req.session.token; // or use req.headers["x-access-token"], depending on your setup
 
     if (!token) {
         return res.status(403).send({
@@ -12,20 +25,16 @@ verifyToken = (req, res, next) => {
         });
     }
 
-    jwt.verify(token,
-        config.secret,
-        (err, decoded) => {
-            if (err) {
-                return res.status(401).send({
-                    message: "Unauthorized!",
-                });
-            }
-            req.userId = decoded.id;
-            next();
-        });
+    jwt.verify(token, config.secret, (err, decoded) => {
+        if (err) {
+            return catchError(err, res);
+        }
+        req.userId = decoded.id;
+        next();
+    });
 };
 
-isAdmin = async (req, res, next) => {
+const isAdmin = async (req, res, next) => {
     try {
         const user = await User.findByPk(req.userId);
         const roles = await user.getRoles();
@@ -46,7 +55,7 @@ isAdmin = async (req, res, next) => {
     }
 };
 
-isModerator = async (req, res, next) => {
+const isModerator = async (req, res, next) => {
     try {
         const user = await User.findByPk(req.userId);
         const roles = await user.getRoles();
@@ -67,7 +76,7 @@ isModerator = async (req, res, next) => {
     }
 };
 
-isModeratorOrAdmin = async (req, res, next) => {
+const isModeratorOrAdmin = async (req, res, next) => {
     try {
         const user = await User.findByPk(req.userId);
         const roles = await user.getRoles();
@@ -92,37 +101,11 @@ isModeratorOrAdmin = async (req, res, next) => {
     }
 };
 
-const { TokenExpiredError } = jwt;
-
-const catchError = (err, res) => {
-  if (err instanceof TokenExpiredError) {
-    return res.status(401).send({ message: "Unauthorized! Access Token was expired!" });
-  }
-
-  return res.sendStatus(401).send({ message: "Unauthorized!" });
-}
-
-const verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
-
-  if (!token) {
-    return res.status(403).send({ message: "No token provided!" });
-  }
-
-  jwt.verify(token, config.secret, (err, decoded) => {
-    if (err) {
-      return catchError(err, res);
-    }
-    req.userId = decoded.id;
-    next();
-  });
-};
-
-
 const authJwt = {
     verifyToken,
     isAdmin,
     isModerator,
     isModeratorOrAdmin,
 };
+
 module.exports = authJwt;

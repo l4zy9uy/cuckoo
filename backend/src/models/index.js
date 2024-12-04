@@ -29,11 +29,11 @@ db.refreshToken = require("../models/refreshToken.model.js")(sequelize, Sequeliz
 db.branch = require("../models/branch.model.js")(sequelize, Sequelize);
 db.table = require("../models/table.model.js")(sequelize, Sequelize);
 db.customer = require("../models/customer.model.js")(sequelize, Sequelize);
-db.employee = require("../models/employee.model.js")(sequelize, Sequelize);  // Updated path for Employee model
-db.menu = require("../models/menu.model.js")(sequelize, Sequelize);  // Added Menu model
+db.employee = require("../models/employees.model.js")(sequelize, Sequelize);  // Updated path for Employee model
+db.menu = require("../models/menus.model.js")(sequelize, Sequelize);  // Added Menu model
 db.order = require("../models/order.model.js")(sequelize, Sequelize);  // Added Order model
-db.orderItem = require("../models/order_item.model.js")(sequelize, Sequelize);  // Added OrderItem model
-db.supplier = require("../models/supplier.model.js")(sequelize, Sequelize);  // Added Supplier model
+db.orderItem = require("../models/order_items.model.js")(sequelize, Sequelize);  // Added OrderItem model
+db.supplier = require("../models/suppliers.model.js")(sequelize, Sequelize);  // Added Supplier model
 db.inventory = require("../models/inventory.model.js")(sequelize, Sequelize);  // Added Inventory model
 
 // Define relationships
@@ -137,4 +137,12 @@ db.orderItem.belongsTo(db.menu, {
 });
 
 // Supplier and Inventory relationships
-db.supplier.hasMa
+db.supplier.hasMany(db.inventory, {
+    foreignKey: 'supplier_id',
+    onDelete: 'CASCADE'
+});
+db.inventory.belongsTo(db.supplier, {
+    foreignKey: 'supplier_id'
+});
+
+module.exports = db;
