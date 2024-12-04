@@ -131,7 +131,7 @@ const ProductsPage = () => {
         setFilteredRows(filtered);
     }, [filters]);
 
-
+    console.log("filter rows: ", filteredRows)
     return (
         <Grid2 container spacing={2} sx={{height: '100vh', padding: '1rem'}}>
             {/* Sidebar */}

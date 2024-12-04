@@ -41,6 +41,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
     const [rowsPerPage, setRowsPerPage] = useState(pageSizeOptions[0]);
     const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
 
+    console.log("row: ", rows)
     // Sorting logic
     const sortedRows = useMemo(() => {
         if (!orderBy) return rows;

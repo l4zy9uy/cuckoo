@@ -5,35 +5,33 @@ import {Grid2, Paper, Box, Select, MenuItem, TextField} from '@mui/material';
 import HeaderActions from '@/components/HeaderAction.tsx';
 import CustomTable from '@/components/CustomTable.tsx';
 import AddEmployeeDialog from '@/components/dialogs/AddEmployeeDialog.tsx';
-import EmployeeDetailsCollapse from '@/components/EmployeeDetailsCollapse.tsx';
+import EmployeeDetailsCollapse, {
+    EmployeeDetails
+} from '@/components/EmployeeDetailsCollapse.tsx';
 import Typography from "@mui/material/Typography";
 
 const tableColumns = [
-    {field: 'employeeId', headerName: 'Mã nhân viên', width: 150},
-    {field: 'employeeName', headerName: 'Tên nhân viên', width: 200},
+    {field: 'id', headerName: 'Mã nhân viên', width: 150},
+    {field: 'name', headerName: 'Tên nhân viên', width: 200},
     {field: 'phone', headerName: 'Số điện thoại', width: 150},
     {field: 'idCard', headerName: 'Số CMND/CCCD', width: 150},
     {field: 'notes', headerName: 'Ghi chú', width: 100},
 ];
 
-const tableRows = [
+const tableRows: EmployeeDetails[] = [
     {
-        employeeId: 'NV000001',
-        employeeName: 'Nguyễn Văn A',
+        id: 'NV000001',
+        name: 'Nguyễn Văn A',
         phone: '0702259661',
         idCard: '123456789',
         notes: 'Ghi chú về nhân viên',
         startDate: '2022-01-01',
-        payBranch: 'Chi nhánh trung tâm',
         workBranches: 'Tất cả chi nhánh',
+        email: "hihi@gmail.com",
         account: 'user123',
-        email: 'employee@example.com',
-        facebook: 'facebook.com/employee',
         address: '123 Main St',
-        mobileDevice: 'iPhone',
         gender: 'Nam',
         birthDate: '1990-01-01',
-        department: 'Sales',
         position: 'Manager',
     },
     // Additional rows can be added here
@@ -97,7 +95,7 @@ const EmployeesPage = () => {
                         rows={tableRows}
                         columns={tableColumns}
                         renderCollapse={(row) => (
-                            <EmployeeDetailsCollapse employee={row}/>
+                            <EmployeeDetailsCollapse employee={row as EmployeeDetails} />
                         )}
                     />
                 </Paper>

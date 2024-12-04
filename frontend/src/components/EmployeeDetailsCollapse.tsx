@@ -4,24 +4,27 @@ import {Box, Typography, Grid2, Button, Divider} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-type EmployeeDetailsCollapseProps = {
-    employee: {
-        id: string;
-        name: string;
-        attendanceCode: string;
-        workBranches: string;
-        account: string;
-        phone: string;
-        address: string;
-        notes?: string;
-        gender?: string;
-        birthDate?: string;
-        idCard?: string;
-        position?: string;
-    };
+export type EmployeeDetails = {
+    id: string;
+    name: string;
+    workBranches: string;
+    account: string;
+    phone: string;
+    startDate: string,
+    address: string;
+    email: string;
+    notes?: string;
+    gender?: string;
+    birthDate?: string;
+    idCard: string;
+    position?: string;
+}
+export type EmployeeDetailsProps = {
+    employee: EmployeeDetails;
 };
 
-const EmployeeDetailsCollapse: React.FC<EmployeeDetailsCollapseProps> = ({employee}) => {
+const EmployeeDetailsCollapse: React.FC<EmployeeDetailsProps> = ({employee}) => {
+    console.log("employee: ", employee);
     return (
         <Box sx={{
             padding: 3,
@@ -72,8 +75,6 @@ const EmployeeDetailsCollapse: React.FC<EmployeeDetailsCollapseProps> = ({employ
                             <Typography variant="subtitle2"
                                         color="text.secondary">Mã chấm
                                 công:</Typography>
-                            <Typography
-                                variant="body1">{employee.attendanceCode}</Typography>
                         </Grid2>
                         <Grid2 container size={{xs: 6}}>
                             <Typography variant="subtitle2"
