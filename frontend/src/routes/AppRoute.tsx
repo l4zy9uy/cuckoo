@@ -9,7 +9,6 @@ import ProductsPage from '../pages/ProductsPage';
 import PriceBookPage from '../pages/PriceBookPage';
 import StockTakesPage from '../pages/StockTakesPage';
 import InvoicesPage from '../pages/InvoicesPage';
-import PurchaseOrderPage from '../pages/PurchaseOrderPage';
 import EmployeesPage from '../pages/EmployeesPage';
 import TimesheetPage from '../pages/TimesheetPage';
 import EmployerSettingsPage from '../pages/EmployerSettingsPage';
@@ -22,6 +21,7 @@ import ReceptionPage from '../pages/ReceptionPage';
 import BranchManagementPage from '../pages/BranchManagementPage';
 import OperationHistoryPage from '../pages/OperationHistoryPage';
 import PosSettingsPage from "@/pages/PosSettingsPage.tsx";
+import ImportOrdersPage from "../pages/PurchaseOrderPage";
 
 const AppRoutes = () => (
     <Routes>
@@ -34,7 +34,7 @@ const AppRoutes = () => (
         <Route path="/pricebook" element={<PriceBookPage />} />
         <Route path="/stocktakes" element={<StockTakesPage />} />
         <Route path="/invoices" element={<InvoicesPage />} />
-        <Route path="/purchaseorder" element={<PurchaseOrderPage />} />
+        <Route path="/purchaseorder" element={<ImportOrdersPage />} />
         <Route path="/employees" element={<EmployeesPage />} />
         <Route path="/timesheet" element={<TimesheetPage />} />
         <Route path="/employersettings" element={<EmployerSettingsPage />} />

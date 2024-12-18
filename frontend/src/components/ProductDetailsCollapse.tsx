@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import Grid2 from '@mui/material/Grid2'; // Use Grid2 for flex layout and spacing
 import CheckIcon from "@mui/icons-material/Check";
-import PrintIcon from "@mui/icons-material/Print";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 type DetailItem = {
@@ -33,9 +32,7 @@ const ProductDetailsCollapse: React.FC<ProductDetailsCollapseProps> = ({
                                                                            imageUrl = "https://via.placeholder.com/150",
                                                                            productName = "Product Name",
                                                                            statusIcons = [
-                                                                               { label: "Bán trực tiếp", color: "green", icon: <CheckIcon fontSize="small" /> },
-                                                                               { label: "Không tích điểm", color: "red", icon: <CheckIcon fontSize="small" /> },
-                                                                               { label: "Không là món thêm", color: "red", icon: <CheckIcon fontSize="small" /> },
+
                                                                            ],
                                                                        }) => {
     return (
@@ -102,12 +99,6 @@ const ProductDetailsCollapse: React.FC<ProductDetailsCollapseProps> = ({
                 <Box sx={{ display: 'flex', gap: 2, mt: 3, justifyContent: 'center' }}>
                     <Button variant="contained" color="primary" startIcon={<CheckIcon />}>
                         Cập nhật
-                    </Button>
-                    <Button variant="outlined" color="secondary" startIcon={<PrintIcon />}>
-                        In mã vạch
-                    </Button>
-                    <Button variant="contained" color="success" startIcon={<CheckIcon />}>
-                        Trạng thái kinh doanh
                     </Button>
                     <Button variant="contained" color="error" startIcon={<DeleteIcon />}>
                         Xóa

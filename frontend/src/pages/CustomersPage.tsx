@@ -33,7 +33,7 @@ const CustomersPage = () => {
                 <Paper elevation={3} sx={{height: '100%'}}>
                     <SidebarFilter
                         title="Tìm kiếm"
-                        searchPlaceholder="Theo tên phòng/bàn"
+                        searchPlaceholder="Ten khach hang"
                         onStatusChange={handleStatusChange}
                     />
                 </Paper>
