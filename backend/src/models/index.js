@@ -1,3 +1,4 @@
+const { generateBranches, generateCustomers, generateEmployees, generateOrders } = require('../seeder/initialData');
 const config = require("../config/db.config.js");
 const Sequelize = require("sequelize");
 
@@ -144,5 +145,48 @@ db.supplier.hasMany(db.inventory, {
 db.inventory.belongsTo(db.supplier, {
     foreignKey: 'supplier_id'
 });
+
+// Add seeding function
+db.seed = async () => {
+    try {
+        // Check if data already exists
+        const branchCount = await db.branch.count();
+        if (branchCount > 0) {
+            console.log('Database already seeded');
+            return;
+        }
+
+        // Generate and insert branches
+        const branches = generateBranches(100);
+        const createdBranches = await db.branch.bulkCreate(branches);
+        const branchIds = createdBranches.map(branch => branch.restaurant_id);
+        console.log('Branches seeded');
+
+        // Generate and insert customers
+        const customers = generateCustomers(100, branchIds);
+        const createdCustomers = await db.customer.bulkCreate(customers);
+        const customerIds = createdCustomers.map(customer => customer.customer_id); // Assuming primary key is customer_id
+        console.log('Customers seeded');
+
+        // Generate and insert employees
+        const employees = generateEmployees(100, branchIds);
+        const createdEmployees = await db.employee.bulkCreate(employees);
+        const employeeIds = createdEmployees.map(employee => employee.id);
+        console.log('Employees seeded');
+
+        // Generate and insert orders
+        const orders = generateOrders(200, branchIds, customerIds, employeeIds);
+        await db.order.bulkCreate(orders);
+        console.log('Orders seeded');
+
+        console.log('Database seeding completed');
+    } catch (error) {
+        console.error('Database seeding failed:', error);
+        console.error('Error details:', error.message);
+        if (error.errors) {
+            error.errors.forEach(err => console.error('Validation error:', err.message));
+        }
+    }
+};
 
 module.exports = db;
