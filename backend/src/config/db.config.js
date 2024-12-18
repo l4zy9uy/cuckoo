@@ -5,7 +5,7 @@ console.log("password: ", process.env.DB_PASSWORD);
 module.exports = {
     HOST: "localhost",
     USER: "root",
-    PASSWORD: process.env.DB_PASSWORD,
+    PASSWORD : process.env.DB_PASSWORD,
     DB: "testdb",
     dialect: "mysql",
     pool: {
