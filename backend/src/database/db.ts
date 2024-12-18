@@ -4,6 +4,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+console.log(process.env.DB_NAME);
+console.log(process.env.DB_USERNAME);
+console.log(process.env.DB_PASSWORD);
+
 const sequelizeConnection = new Sequelize(
   process.env.DB_NAME || "default",
   process.env.DB_USERNAME || "default",
