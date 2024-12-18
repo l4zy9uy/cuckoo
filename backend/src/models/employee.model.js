@@ -1,12 +1,14 @@
+import { Model, DataTypes } from "sequelize";
+
 module.exports = (sequelize, Sequelize) => {
     const Employee = sequelize.define("employee", {
       employee_id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
       branch_id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       name: {

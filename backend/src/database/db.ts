@@ -1,0 +1,34 @@
+import { Sequelize } from "sequelize";
+
+import dotenv from "dotenv";
+
+dotenv.config();
+
+console.log(process.env.DB_NAME);
+console.log(process.env.DB_USERNAME);
+console.log(process.env.DB_PASSWORD);
+
+const sequelizeConnection = new Sequelize(
+  process.env.DB_NAME || "default",
+  process.env.DB_USERNAME || "default",
+  process.env.DB_PASSWORD || "default",
+  {
+    host: process.env.DB_HOST || "localhost",
+    port: Number(process.env.DB_PORT || "3306"),
+    logging: false,
+    dialect: "mysql",
+    timezone: "+07:00",
+  }
+);
+
+const checkConnection = async () => {
+  try {
+    sequelizeConnection.authenticate();
+    console.log("Connection has been established successfully.");
+  } catch (err) {
+    console.error(`Unable to connect to the database, err: ${err}`);
+  }
+};
+checkConnection();
+
+export { sequelizeConnection };

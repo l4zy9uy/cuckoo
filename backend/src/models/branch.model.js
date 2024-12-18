@@ -1,3 +1,4 @@
+const {DataTypes} = require("sequelize");
 module.exports = (sequelize, Sequelize) => {
     const Branch = sequelize.define("branch", {
         branch_id: {
@@ -27,5 +28,5 @@ module.exports = (sequelize, Sequelize) => {
         },
     });
 
-    return Branch;
+    return Branch
 };

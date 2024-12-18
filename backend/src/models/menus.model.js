@@ -1,7 +1,18 @@
-module.exports = (sequelize, Sequelize) => {
-    const Menu = sequelize.define("menu", {
+const Sequelize = require("sequelize");
+
+module.exports = (sequelize) => {
+    const Menu = sequelize.define("Menu", {
+        menu_id: {
+            type: Sequelize.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        branch_id: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
         name: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(100),
             allowNull: false,
         },
         description: {
@@ -16,11 +27,11 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         item_type: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(50),
             allowNull: false,
         },
         item_group: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(50),
             allowNull: false,
         },
         availability: {
@@ -28,12 +39,11 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: true,
         },
         image: {
-            type: Sequelize.STRING, // Adjust type if you need to store actual image data or URL
+            type: Sequelize.STRING, // Assuming image is a URL or file path stored as a string
         },
     });
 
     Menu.associate = (models) => {
-        // Associations
         Menu.belongsTo(models.Branch, {
             foreignKey: "branch_id",
             onDelete: "CASCADE",
