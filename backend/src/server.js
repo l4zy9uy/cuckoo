@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const cookieSession = require("cookie-session");
-
 const app = express();
 
 app.use(cors());
@@ -28,21 +27,27 @@ db.sequelize.sync({ force: true }).then(() => {
   initial();
 });
 
-function initial() {
-  Role.create({
-    id: 1,
-    name: "user"
-  });
+async function initial() {
+  try {
+    Role.create({
+      id: 1,
+      name: "user"
+    });
 
-  Role.create({
-    id: 2,
-    name: "moderator"
-  });
+    Role.create({
+      id: 2,
+      name: "moderator"
+    });
 
-  Role.create({
-    id: 3,
-    name: "admin"
-  });
+    Role.create({
+      id: 3,
+      name: "admin"
+    });
+
+  } catch (error) {
+    console.error('Error in initial seeding:', error);
+
+  }
 }
 
 // simple route
@@ -60,7 +65,7 @@ require("./routes/employee.route")(app);
 require("./routes/menu.controller")(app);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
