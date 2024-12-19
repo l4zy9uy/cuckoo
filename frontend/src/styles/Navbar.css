@@ -1,0 +1,75 @@
+/* src/components/Navbar.css */
+
+/* Top Bar Styling */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    padding: 5px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+}
+
+.logo-container img {
+    width: 40px;      /* Adjust the width as needed */
+    height: 40px;     /* Adjust the height to maintain aspect ratio */
+    object-fit: contain; /* Ensure the image doesn't get distorted */
+    border-radius: 8px; /* Optional: Add rounded corners */
+}
+
+.top-bar-left,
+.top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon {
+    font-size: 18px;
+    color: #666;
+    cursor: pointer;
+}
+
+/* Blue Navigation Bar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #007bff;
+    padding: 10px 20px;
+    color: white;
+    height: 60px;
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar-logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.navbar-menu {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+/* Left and Right Menu */
+.navbar-left, .navbar-right {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+.navbar-left li, .navbar-right li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
