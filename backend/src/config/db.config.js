@@ -3,8 +3,8 @@ dotenv.config();
 console.log("password: ", process.env.DB_PASSWORD);
 
 module.exports = {
-    HOST: "localhost",
-    USER: "root",
+    HOST: process.env.HOST,
+    USER: process.env.DB_USER,
     PASSWORD : process.env.DB_PASSWORD,
     DB: "testdb",
     dialect: "mysql",
