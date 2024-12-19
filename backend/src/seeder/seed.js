@@ -2,6 +2,7 @@ const { sequelize } = require('../models');
 const { Branch, Customer, Employee, Order, Menu, OrderItem } = require('../models');
 const { generateBranches, generateCustomers, generateEmployees, generateOrderItems, generateMenus } = require('./initialData');
 
+//seed
 async function seedDatabase() {
   try {
     // Clear existing data

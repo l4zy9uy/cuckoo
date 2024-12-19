@@ -1,5 +1,6 @@
 const { faker } = require('@faker-js/faker/locale/vi');
 
+// gen fake data
 const generateBranches = (count) => {
     const branches = [];
     for (let i = 0; i < count; i++) {
