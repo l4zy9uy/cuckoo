@@ -1,5 +1,16 @@
 import React, { useState } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  TextField,
+  Box,
+} from "@mui/material";
 
 type Branch = {
   id: number;
@@ -10,22 +21,46 @@ type Branch = {
 };
 
 const initialBranches: Branch[] = [
-  { id: 1, name: "Nhà hàng số 1", address: "123 Giải Phóng", phone: "123-456-7890", openingHours: "9 AM - 9 PM" },
-  { id: 2, name: "Nhà hàng số 2", address: "456 Lê Thanh Nghị", phone: "987-654-3210", openingHours: "10 AM - 8 PM" },
-  { id: 3, name: "Nhà hàng số 3", address: "789 Lê Duẩn", phone: "456-789-1230", openingHours: "9 AM - 5 PM" },
+  { id: 1, name: "Central Branch", address: "123 Giai Phong", phone: "123-456-7890", openingHours: "9 AM - 9 PM" },
+  { id: 2, name: "East Branch", address: "456 Le Duan", phone: "987-654-3210", openingHours: "10 AM - 8 PM" },
+  { id: 3, name: "West Branch", address: "789 Le Thanh Nghi", phone: "456-789-1230", openingHours: "9 AM - 5 PM" },
 ];
 
 const BranchManagementPage = () => {
   const [branches, setBranches] = useState<Branch[]>(initialBranches);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleDelete = (id: number) => {
     const updatedBranches = branches.filter((branch) => branch.id !== id);
     setBranches(updatedBranches);
   };
 
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredBranches = branches.filter(
+    (branch) =>
+      branch.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      branch.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      branch.phone.includes(searchTerm)
+  );
+
   return (
     <div>
       <h1>Branch Management</h1>
+      {/* Search Bar */}
+      <Box sx={{ marginBottom: "1rem" }}>
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder="Search by name, address, or phone"
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+      </Box>
+
+      {/* Branch Table */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -39,7 +74,7 @@ const BranchManagementPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {branches.map((branch) => (
+            {filteredBranches.map((branch) => (
               <TableRow key={branch.id}>
                 <TableCell>{branch.id}</TableCell>
                 <TableCell>{branch.name}</TableCell>
@@ -57,6 +92,13 @@ const BranchManagementPage = () => {
                 </TableCell>
               </TableRow>
             ))}
+            {filteredBranches.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  No branches found
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
