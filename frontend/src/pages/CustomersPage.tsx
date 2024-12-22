@@ -1,6 +1,6 @@
 // src/pages/CustomersPage.tsx
 import {useState} from 'react';
-import {Grid, Paper} from "@mui/material";
+import {Grid2, Paper} from "@mui/material";
 import SidebarFilter from "@/components/SidebarFilter.tsx";
 import Box from "@mui/material/Box";
 import HeaderActions from "@/components/HeaderAction.tsx";
@@ -27,9 +27,9 @@ const CustomersPage = () => {
         // Additional logic for filtering rows based on status can go here
     };
     return (
-        <Grid container spacing={2} sx={{height: '100vh', padding: '1rem'}}>
+        <Grid2 container spacing={2} sx={{height: '100vh', padding: '1rem'}}>
             {/* Sidebar */}
-            <Grid>
+            <Grid2>
                 <Paper elevation={3} sx={{height: '100%'}}>
                     <SidebarFilter
                         title="Tìm kiếm"
@@ -37,11 +37,11 @@ const CustomersPage = () => {
                         onStatusChange={handleStatusChange}
                     />
                 </Paper>
-            </Grid>
+            </Grid2>
 
             {/* Main Content */}
-            <Grid sx={{display: 'flex', flexDirection: 'column'}}
-                   >
+            <Grid2 sx={{display: 'flex', flexDirection: 'column'}}
+                   size="grow">
                 <Paper elevation={3}
                        sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                     <Box sx={{padding: '2rem', flex: 1, overflow: 'auto'}}>
@@ -112,8 +112,8 @@ const CustomersPage = () => {
                                      )}/>
                     </Box>
                 </Paper>
-            </Grid>
-        </Grid>
+            </Grid2>
+        </Grid2>
     );
 };
 
