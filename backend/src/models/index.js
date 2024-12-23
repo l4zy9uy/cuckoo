@@ -1,4 +1,6 @@
-const { generateBranches, generateCustomers, generateEmployees, generateOrders } = require('../seeder/initialData');
+const { generateBranches, generateCustomers, generateEmployees, generateOrders,
+    generateMenus
+} = require('../seeder/initialData');
 const config = require("../config/db.config.js");
 const Sequelize = require("sequelize");
 
@@ -178,6 +180,12 @@ db.seed = async () => {
         const orders = generateOrders(200, branchIds, customerIds, employeeIds);
         await db.order.bulkCreate(orders);
         console.log('Orders seeded');
+
+        console.log('Database seeding completed');
+
+        const menus = generateMenus(200, branchIds);
+        await db.menu.bulkCreate(menus);
+        console.log('Menus seeded');
 
         console.log('Database seeding completed');
     } catch (error) {
