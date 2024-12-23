@@ -26,6 +26,7 @@ type CustomTableProps = {
     columns: Column[];
     pageSizeOptions?: number[]; // Options for page sizes
     renderCollapse?: (row: Record<string, any>) => React.ReactNode; // Callback for rendering collapsible content
+    onRowSelectionChange?: (selectedIds: Set<number>) => void; // Callback when row selection changes
 };
 
 const CustomTable: React.FC<CustomTableProps> = ({
@@ -33,6 +34,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                                                      columns,
                                                      pageSizeOptions = [5, 10, 25],
                                                      renderCollapse,
+                                                     onRowSelectionChange, // Added callback for selection change
                                                  }) => {
     const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
     const [order, setOrder] = useState<'asc' | 'desc'>('asc');
@@ -41,7 +43,6 @@ const CustomTable: React.FC<CustomTableProps> = ({
     const [rowsPerPage, setRowsPerPage] = useState(pageSizeOptions[0]);
     const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
 
-    console.log("row: ", rows)
     // Sorting logic
     const sortedRows = useMemo(() => {
         if (!orderBy) return rows;
@@ -67,6 +68,14 @@ const CustomTable: React.FC<CustomTableProps> = ({
         setOrderBy(field);
     };
 
+    // Notify parent component of row selection change
+    const notifySelectionChange = (newSelectedRows: Set<number>) => {
+        setSelectedRows(newSelectedRows);
+        if (onRowSelectionChange) {
+            onRowSelectionChange(newSelectedRows);
+        }
+    };
+
     // Handle row selection
     const handleCheckboxChange = (rowIndex: number) => {
         setSelectedRows((prevSelectedRows) => {
@@ -76,8 +85,15 @@ const CustomTable: React.FC<CustomTableProps> = ({
             } else {
                 newSelectedRows.add(rowIndex);
             }
+            notifySelectionChange(newSelectedRows);
             return newSelectedRows;
         });
+    };
+
+    // Handle Select All
+    const handleSelectAll = (checked: boolean) => {
+        const newSelectedRows = checked ? new Set(rows.map((_, index) => index)) : new Set();
+        notifySelectionChange(newSelectedRows as Set<number>);
     };
 
     // Handle expand/collapse of rows
@@ -113,13 +129,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                             <Checkbox
                                 indeterminate={selectedRows.size > 0 && selectedRows.size < rows.length}
                                 checked={rows.length > 0 && selectedRows.size === rows.length}
-                                onChange={(e) => {
-                                    if (e.target.checked) {
-                                        setSelectedRows(new Set(rows.map((_, index) => index)));
-                                    } else {
-                                        setSelectedRows(new Set());
-                                    }
-                                }}
+                                onChange={(e) => handleSelectAll(e.target.checked)}
                             />
                         </TableCell>
                         {/* Columns */}

@@ -1,227 +1,241 @@
-// src/pages/ProductsPage.tsx
-import CustomTable from "../components/CustomTable.tsx";
-import {Grid2, Paper} from "@mui/material";
+import { useEffect, useState } from "react";
+import {
+    Grid2,
+    Paper,
+    Box,
+    Alert, Snackbar
+} from "@mui/material";
 import SidebarFilter from "@/components/SidebarFilter.tsx";
-import Box from "@mui/material/Box";
 import HeaderActions from "@/components/HeaderAction.tsx";
-import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx"
 import AddProductDialog from "@/components/dialogs/AddProductDialog.tsx";
-import {useEffect, useState} from "react";
+import CustomTable from "../components/CustomTable.tsx";
+import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx";
+import axios from "axios";
 
 const productColumns = [
-    {field: 'id', headerName: 'Mã hàng hóa', width: 150},
-    {field: 'name', headerName: 'Tên hàng', flexGrow: 1},
-    {field: 'type', headerName: 'Loại thực đơn', width: 150},
-    {field: 'price', headerName: 'Giá bán', width: 120},
-    {field: 'stock', headerName: 'Tồn kho', width: 120},
+    { field: 'id', headerName: 'Mã hàng hóa', width: 150 },
+    { field: 'name', headerName: 'Tên hàng', flexGrow: 1 },
+    { field: 'item_type', headerName: 'Loại thực đơn', width: 150 },
+    { field: 'price', headerName: 'Giá bán', width: 120 },
+    { field: 'stock', headerName: 'Tồn kho', width: 120 },
 ];
-
-type Row = {
-    id: string;
-    name: string;
-    type: string;
-    price: string; // Representing a formatted number as a string
-    stock: string; // Representing a formatted number as a string
+type FiltersState = {
+    search: string;
+    accordion: Record<string, string[]>; // Explicitly type accordion as a record
+    selectedTypes: string[]; // Ensure selectedTypes is string[]
 };
 
-
-const productRows: Row[] = [
-    {
-        id: 'SP000023',
-        name: 'Thuốc lá Vinataba',
-        type: 'Khác',
-        price: '30,000',
-        stock: '25,177'
-    },
-    {
-        id: 'SP000024',
-        name: 'Thuốc lá Marlboro',
-        type: 'Khác',
-        price: '30,000',
-        stock: '1,005'
-    },
-    {
-        id: 'SP000025',
-        name: 'Thuốc lá Kent HD',
-        type: 'Khác',
-        price: '30,000',
-        stock: '1,011'
-    },
-    {
-        id: 'SP000018',
-        name: 'Mint Tea',
-        type: 'Khác',
-        price: '15,000',
-        stock: '1,007'
-    },
-];
-
-const accordionData = [
-    {
-        title: 'Loại thực đơn',
-        items: [
-            {label: 'Đồ ăn'},
-            {label: 'Đồ uống'},
-            {label: 'Khác'},
-        ],
-    },
-    {
-        title: 'Loại hàng',
-        items: [
-            {label: 'Hàng hóa thường'},
-            {label: 'Chế biến'},
-            {label: 'Dịch vụ'},
-            {label: 'Combo - Đóng gói'},
-        ],
-    },
-];
-
-type Filters = {
-    search: string;
-    accordion: Record<string, string[]>; // Accordion filters: key-value pairs where values are string arrays
+export type ProductRow = {
+    id: string;
+    name: string;
+    item_type: string;
+    price: string;
+    stock: string;
+    branch_id: number;
+    description: string;
+    sale_price: number;
+    cost_price: number;
+    item_group: string;
+    availability?: boolean;
+    image?: string;
 };
 
 const ProductsPage = () => {
-    const [filters, setFilters] = useState<Filters>({
-        search: "", // For search input
-        accordion: {}, // For accordion filters
+    const [filters, setFilters] = useState<FiltersState>({
+        search: "",
+        accordion: {},
+        selectedTypes: [],
     });
 
-    const [filteredRows, setFilteredRows] = useState(productRows);
+    const [allRows, setAllRows] = useState<ProductRow[]>([]);
+    const [filteredRows, setFilteredRows] = useState<ProductRow[]>([]);
+    const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+    const [_loading, setLoading] = useState(false);
+    const [_error, setError] = useState<string | null>(null);
+    const [notification, setNotification] = useState<{type: string, message: string} | null>(null); // State for notifications
+    const [snackbar, setSnackbar] = useState<{
+        open: boolean;
+        type: "success" | "error" | "warning" | "info";
+        message: string;
+    }>({
+        open: false,
+        type: "success", // Default value
+        message: "",
+    });
 
-    const handleSearchChange = (value: string) => {
-        setFilters((prev) => ({ ...prev, search: value }));
+    const fetchProducts = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get("http://localhost:3000/api/menus");
+            const products = response.data.map((product: any) => ({
+                id: product.menu_id,
+                name: product.name,
+                item_type: product.item_type,
+                price: product.sale_price.toString(),
+                stock: product.stock?.toString() || "N/A",
+                branch_id: product.branch_id || 0,
+                description: product.description || "No description available",
+                sale_price: parseFloat(product.sale_price) || 0,
+                cost_price: parseFloat(product.cost_price) || 0,
+                item_group: product.item_group || "Unknown",
+                availability: product.availability !== undefined ? Boolean(product.availability) : true,
+                image: product.image || "https://via.placeholder.com/150",
+            }));
+
+            setAllRows(products);
+        } catch (err) {
+            setError("Failed to fetch products");
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleAccordionFilterChange = (accordionFilters: Record<string, string[]>) => {
-        setFilters((prev) => ({ ...prev, accordion: accordionFilters }));
+    const handleUpdate = async (updatedRow: Partial<ProductRow>) => {
+        try {
+            await axios.put(`http://localhost:3000/api/menus/${updatedRow.id}`, updatedRow);
+            await fetchProducts(); // Refresh table data
+            setSnackbar({ open: true, type: "success", message: "Updated successfully!" });
+        } catch (error) {
+            console.error("Failed to update product:", error);
+            setSnackbar({ open: true, type: "error", message: "Failed to update product." });
+        }
+    };
+
+    const handleDeleteSelectedRows = async () => {
+        try {
+            console.log(selectedRows)
+            for (const id of selectedRows) {
+                console.log("id: ", allRows[id].id)
+                await axios.delete(`http://localhost:3000/api/menus/${allRows[id].id}`);
+            }
+            await fetchProducts();
+            setSelectedRows(new Set());
+            setSnackbar({ open: true, type: "success", message: "Deleted successfully!" }); // Success Snackbar
+            console.log("Deleting Product successfully");
+        } catch (err) {
+            setError("Failed to delete selected products");
+            setSnackbar({ open: true, type: "error", message: "Failed to delete items." }); // Error Snackbar
+        }
+    };
+
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    const handleCloseSnackbar = () => {
+        setSnackbar({ ...snackbar, open: false }); // Close the Snackbar
     };
 
     useEffect(() => {
-        // Filter the rows based on search and accordion filters
-        const { search, accordion } = filters;
-        let filtered = productRows;
+        let filtered = allRows;
 
-        // Apply search filter
-        if (search) {
+        if (filters.search) {
             filtered = filtered.filter((row) =>
                 Object.values(row).some((val) =>
-                    val.toString().toLowerCase().includes(search.toLowerCase())
+                    val.toString().toLowerCase().includes(filters.search.toLowerCase())
                 )
             );
         }
 
-        const accordionKeyMap: Record<string, keyof Row> = {
-            "Loại thực đơn": "type",
-            "Loại hàng": "name", // Adjust based on actual filter categories
-            // Add other mappings as needed
-        };
-
-        // Apply accordion filters
-        Object.entries(accordion).forEach(([key, values]) => {
-            const rowKey = accordionKeyMap[key]; // Map the accordion key to the corresponding Row key
-            if (rowKey && values.length > 0) {
-                filtered = filtered.filter((row) => {
-                    const value = row[rowKey];
-                    return values.includes(value);
-                });
-            }
-        });
+        if (filters.selectedTypes.length > 0) {
+            filtered = filtered.filter((row) => filters.selectedTypes.includes(row.item_type as never));
+        }
 
         setFilteredRows(filtered);
-    }, [filters]);
+    }, [filters, allRows]);
 
-    console.log("filter rows: ", filteredRows)
+    useEffect(() => {
+        if (notification) {
+            const timer = setTimeout(() => setNotification(null), 3000); // Auto-hide notification after 3 seconds
+            return () => clearTimeout(timer); // Cleanup timeout
+        }
+    }, [notification]);
+
+    const handleAccordionFilterChange = (filters: Record<string, string[]>) => {
+        const selectedTypes = filters['Loại thực đơn'] || [];
+        setFilters((prev) => ({
+            ...prev,
+            accordion: filters, // Update accordion
+            selectedTypes, // Update selectedTypes
+        }));    };
+
     return (
-        <Grid2 container spacing={2} sx={{height: '100vh', padding: '1rem'}}>
-            {/* Sidebar */}
+        <Grid2 container spacing={2} sx={{ height: '100vh', padding: '1rem' }}>
             <Grid2>
-                <Paper elevation={3} sx={{height: '100%'}}>
+                <Paper elevation={3} sx={{ height: '100%' }}>
                     <SidebarFilter
                         title="Tìm kiếm"
                         searchPlaceholder="Theo mã, tên hàng"
-                        accordionData={accordionData}
-                        onSearchChange={handleSearchChange}
+                        accordionData={[
+                            { title: "Loại thực đơn", items: [{ label: "Đồ ăn" }, { label: "Đồ uống" }, { label: "Khác" }] },
+                            { title: "Loại hàng", items: [{ label: "Hàng hóa thường" }, { label: "Chế biến" }, { label: "Dịch vụ" }, { label: "Combo - Đóng gói" }] },
+                        ]}
+                        onSearchChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                         onAccordionFilterChange={handleAccordionFilterChange}
                     />
                 </Paper>
             </Grid2>
 
-            {/* Main Content */}
-            <Grid2 sx={{display: 'flex', flexDirection: 'column'}}
-                   size="grow">
-                <Paper elevation={3}
-                       sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-                    <Box sx={{padding: '2rem', flex: 1, overflow: 'auto'}}>
-                        <HeaderActions text="Khach hang"
-                                       DialogComponent={({open, onClose}) => (
-                                           <AddProductDialog
-                                               open={open}
-                                               onClose={onClose}
-                                               onSave={() => console.log("Saved data:")}
-                                           />
-                                       )}
+            <Grid2 sx={{ display: 'flex', flexDirection: 'column' }} size="grow">
+                <Paper elevation={3} sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ padding: '2rem', flex: 1, overflow: 'auto' }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: '1rem',
+                            }}
+                        >
+                            <HeaderActions
+                                text="Khách hàng"
+                                DialogComponent={({ open, onClose }) => (
+                                    <AddProductDialog open={open} onClose={onClose} onSave={fetchProducts} />
+                                )}
+                                selectedNum={selectedRows.size}
+                                onDelete={handleDeleteSelectedRows}
+                            />
+                        </Box>
+                        <CustomTable
+                            rows={filteredRows}
+                            columns={productColumns}
+                            renderCollapse={(row) => <ProductDetailsCollapse
+                                row={row}
+                                onUpdate={handleUpdate} // Pass update handler
+                            />}
+                            onRowSelectionChange={(ids) => setSelectedRows(new Set(ids))}
                         />
-                        <CustomTable rows={filteredRows}
-                                     columns={productColumns}
-                                     renderCollapse={(row) => (
-                                         <ProductDetailsCollapse
-                                             productName={row.name}
-                                             imageUrl={row.imageUrl}
-                                             details={[
-                                                 {
-                                                     label: "Mã hàng hóa",
-                                                     value: row.code
-                                                 },
-                                                 {
-                                                     label: "Loại thực đơn",
-                                                     value: row.menuType
-                                                 },
-                                                 {
-                                                     label: "Nhóm hàng",
-                                                     value: row.category
-                                                 },
-                                                 {
-                                                     label: "Loại hàng",
-                                                     value: row.itemType
-                                                 },
-                                                 {
-                                                     label: "Định mức tồn",
-                                                     value: row.stockLimit,
-                                                     sx: {color: 'blue'}
-                                                 },
-                                                 {
-                                                     label: "Giá bán",
-                                                     value: row.price,
-                                                     sx: {
-                                                         fontWeight: 'bold',
-                                                         color: 'green'
-                                                     }
-                                                 },
-                                                 {
-                                                     label: "Giá vốn",
-                                                     value: row.cost,
-                                                     sx: {color: 'red'}
-                                                 },
-                                                 {
-                                                     label: "Trọng lượng",
-                                                     value: row.weight
-                                                 },
-                                                 {
-                                                     label: "Mô tả",
-                                                     value: row.description,
-                                                     sx: {fontStyle: 'italic'}
-                                                 },
-                                                 {
-                                                     label: "Ghi chú đặt hàng",
-                                                     value: row.orderNote
-                                                 },
-                                             ]}
-                                         />
-                                     )}/>
                     </Box>
                 </Paper>
             </Grid2>
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={3000} // Auto-hide after 3 seconds
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                sx={{
+                    '& .MuiSnackbarContent-root': {
+                        minWidth: '400px', // Adjust width
+                        fontSize: '0.8rem', // Adjust font size
+                        padding: '0.8rem', // Add padding
+                    },
+                }}
+            >
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    severity={snackbar.type} // 'success' or 'error'
+                    sx={{
+                        width: '100%',
+                        fontSize: '1rem', // Make text larger
+                        padding: '1rem', // Add padding to the Alert
+                    }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
+
         </Grid2>
     );
 };
