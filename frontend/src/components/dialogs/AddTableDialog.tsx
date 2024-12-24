@@ -46,7 +46,7 @@ const AddTableDialog: React.FC<AddTableDialogProps> = ({
         const sanitizedData = {
             ...formData,
             numPerson: parseInt(formData.numPerson, 10) || 0,
-            order: parseInt(formData.order, 10) || 1,
+            order: formData.order || 1,
         };
         console.log(formData)
         onSave(sanitizedData);
