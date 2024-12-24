@@ -29,7 +29,7 @@ exports.findAll = async (req, res) => {
 // Retrieve a single Table by ID
 exports.findOne = async (req, res) => {
     try {
-        const table = await Table.findByPk(req.params.table_id);
+        const table = await Table.findByPk(req.params.id);
         if (table) {
             res.status(200).send(table);
         } else {
@@ -43,7 +43,7 @@ exports.findOne = async (req, res) => {
 // Update a Table by ID
 exports.update = async (req, res) => {
     try {
-        const { table_id } = req.params;
+        const table_id = req.params.id;
         const [updated] = await Table.update(req.body, { where: { table_id } });
         if (updated) {
             const updatedTable = await Table.findOne({ where: { table_id } });
@@ -59,8 +59,8 @@ exports.update = async (req, res) => {
 // Delete a Table by ID
 exports.delete = async (req, res) => {
     try {
-        const { table_id } = req.params;
-        const deleted = await Table.destroy({ where: { table_id } });
+        const table_id = parseInt(req.params.id, 10); // Convert ID to integer
+        const deleted = await Table.destroy({ where: { table_id: table_id } });
         if (deleted) {
             res.status(204).send();
         } else {
