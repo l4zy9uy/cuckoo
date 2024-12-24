@@ -1,4 +1,6 @@
 const { faker } = require('@faker-js/faker/locale/vi');
+const Supplier = require("../models/suppliers.model");
+const Inventory = require("../models/inventory.model");
 
 // gen fake data
 const generateBranches = (count) => {
@@ -50,7 +52,7 @@ const generateEmployees = (count, branchIds) => {
             gender: genders[Math.floor(Math.random() * genders.length)],
             phone: faker.phone.number('0#########'),
             hire_date: faker.date.between({ from: '2015-01-01', to: '2024-01-01' }),
-            salary: faker.number.float({ min: 800, max: 2000, precision: 0.01 }),
+            salary: faker.number.float({ min: 800, max: 2000, fractionDigits: 2}),
             branch_id: branchIds[Math.floor(Math.random() * branchIds.length)],
             createdAt: new Date(),
             updatedAt: new Date()
@@ -97,7 +99,7 @@ const generateOrderItems = (count, orderIds, menuIds) => {
             order_id: orderIds[Math.floor(Math.random() * orderIds.length)],
             menu_id: menuIds[Math.floor(Math.random() * menuIds.length)],
             quantity: Math.floor(Math.random() * 5) + 1, // Random quantity between 1-5
-            price: faker.number.float({ min: 30000, max: 200000, precision: 100 }), // Random price between 30,000 - 200,000
+            price: faker.number.float({ min: 30000, max: 200000, fractionDigits: 2 }), // Random price between 30,000 - 200,000
             createdAt: new Date(),
             updatedAt: new Date()
         };
@@ -147,13 +149,13 @@ const generateMenus = (count = 100, branchIds) => {
         let costPrice, salePrice;
         
         if (itemType === 'Đồ ăn') {
-            costPrice = faker.number.float({ min: 20000, max: 100000, precision: 100 });
+            costPrice = faker.number.float({ min: 20000, max: 100000, fractionDigits: 2 });
             salePrice = costPrice * 1.5; // Markup 50%
         } else if (itemType === 'Đồ uống') {
-            costPrice = faker.number.float({ min: 5000, max: 30000, precision: 100 });
+            costPrice = faker.number.float({ min: 5000, max: 30000, fractionDigits: 2});
             salePrice = costPrice * 2; // Markup 100%
         } else { // Tráng miệng
-            costPrice = faker.number.float({ min: 10000, max: 40000, precision: 100 });
+            costPrice = faker.number.float({ min: 10000, max: 40000,fractionDigits: 2});
             salePrice = costPrice * 1.7; // Markup 70%
         }
 
@@ -194,6 +196,82 @@ const generateMenus = (count = 100, branchIds) => {
     return menuItems;
 };
 
+const generateSuppliers = (count) => {
+    const suppliers = [];
+    for (let i = 0; i < count; i++) {
+        suppliers.push({
+            name: faker.company.name(),
+            address: faker.location.streetAddress(),
+            phone: faker.phone.number("+84 ### ### ####"),
+            email: faker.internet.email(),
+            contact_person: faker.person.fullName(),
+        });
+    }
+    return suppliers;
+};
+
+// Function to generate fake inventory data
+const generateInventories = (count, suppliers) => {
+    const inventories = [];
+    for (let i = 0; i < count; i++) {
+        inventories.push({
+            branch_id: faker.number.int({ min: 1, max: 5 }),
+            supplier_id: faker.helpers.arrayElement(suppliers).supplier_id,
+            item_name: faker.commerce.productName(),
+            quantity: faker.number.float({ min: 1, max: 100, fractionDigits: 2}),
+            unit: faker.helpers.arrayElement(["kg", "liter", "piece"]),
+            cost_price: faker.number.float({ min: 10, max: 1000, fractionDigits: 2 }),
+            last_updated: faker.date.recent(),
+        });
+    }
+    return inventories;
+};
+
+// Function to seed suppliers into the database
+const seedSuppliers = async (count) => {
+    try {
+        const suppliers = generateSuppliers(count);
+        const insertedSuppliers = await Supplier.bulkCreate(suppliers, { returning: true });
+        console.log(`${insertedSuppliers.length} suppliers inserted.`);
+        return insertedSuppliers;
+    } catch (error) {
+        console.error("Error seeding suppliers:", error);
+        throw error;
+    }
+};
+
+// Function to seed inventories into the database
+const seedInventories = async (count, suppliers) => {
+    try {
+        const inventories = generateInventories(count, suppliers);
+        const insertedInventories = await Inventory.bulkCreate(inventories, { returning: true });
+        console.log(`${insertedInventories.length} inventories inserted.`);
+    } catch (error) {
+        console.error("Error seeding inventories:", error);
+        throw error;
+    }
+};
+
+// Main function to seed database
+const seedDatabase = async () => {
+    try {
+        const SUPPLIERS_COUNT = 10;
+        const INVENTORIES_COUNT = 20;
+
+        // Seed suppliers
+        const suppliers = await seedSuppliers(SUPPLIERS_COUNT);
+
+        // Seed inventories using the inserted suppliers
+        await seedInventories(INVENTORIES_COUNT, suppliers);
+
+        console.log("Database seeding completed successfully.");
+    } catch (error) {
+        console.error("Error during database seeding:", error);
+    } finally {
+        await sequelize.close(); // Close the database connection
+    }
+};
+
 module.exports = {
     generateBranches,
     generateCustomers,
@@ -201,4 +279,8 @@ module.exports = {
     generateOrders,
     generateMenus,
     generateOrderItems,
+    generateInventories,
+    generateSuppliers,
+    seedSuppliers,
+    seedInventories
 };

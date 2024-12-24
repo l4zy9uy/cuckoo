@@ -1,8 +1,10 @@
 const { generateBranches, generateCustomers, generateEmployees, generateOrders,
-    generateMenus
+    generateMenus, seedSuppliers, seedInventories, generateSuppliers, generateInventories
 } = require('../seeder/initialData');
 const config = require("../config/db.config.js");
 const Sequelize = require("sequelize");
+const Supplier = require("./suppliers.model");
+const Inventory = require("./inventory.model");
 
 const sequelize = new Sequelize(
     config.DB,
@@ -186,6 +188,14 @@ db.seed = async () => {
         const menus = generateMenus(200, branchIds);
         await db.menu.bulkCreate(menus);
         console.log('Menus seeded');
+
+        const suppliers = generateSuppliers(100);
+        const insertedSuppliers = await db.supplier.bulkCreate(suppliers, { returning: true });
+        console.log(`${insertedSuppliers.length} suppliers inserted.`);
+
+        const inventories = generateInventories(100, suppliers);
+        const insertedInventories = await db.inventory.bulkCreate(inventories, { returning: true });
+        console.log(`${insertedInventories.length} inventories inserted.`);
 
         console.log('Database seeding completed');
     } catch (error) {
