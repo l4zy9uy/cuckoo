@@ -5,8 +5,7 @@ import SidebarFilter from "@/components/SidebarFilter.tsx";
 import Box from "@mui/material/Box";
 import HeaderActions from "@/components/HeaderAction.tsx";
 import CustomTable from "@/components/CustomTable.tsx";
-import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import AddTableDialog from "@/components/dialogs/AddTableDialog.tsx";
 
 const tableColumns = [
@@ -18,16 +17,73 @@ const tableColumns = [
 ];
 
 // @ts-ignore
-const tableRows = []
+const initialTableRows = Array.from({ length: 30 }, (_, i) => {
+    const isRoom = Math.random() < 0.5; // 50% chance to be a room or table
+    const statuses = ["Ngừng hoạt động", "Đang hoạt động"];
+
+    return {
+        id: i + 1, // Table ID
+        name: isRoom
+            ? `Phòng ${Math.floor(101 + Math.random() * 400)}` // Random room name
+            : `Bàn ${String.fromCharCode(65 + Math.floor(Math.random() * 26))}${Math.floor(1 + Math.random() * 10)}`, // Random table name
+        description: isRoom
+            ? `Phòng họp với sức chứa ${Math.floor(5 + Math.random() * 50)} người.`
+            : `Bàn tại vị trí ${Math.random() < 0.5 ? "gần cửa sổ" : "gần quầy bar"}.`,
+        numPerson: Math.floor(2 + Math.random() * 50), // Capacity between 2 and 50
+        status: statuses[Math.floor(Math.random() * statuses.length)], // Random status
+        order: i + 1, // Order for display
+    };
+});
+
 
 const TablesPage = () => {
     // @ts-ignore
-    const [statusFilter, setStatusFilter] = useState('active');
+    const [tableRows, setTableRows] = useState(initialTableRows); // State for all rows
+    const [filteredRows, setFilteredRows] = useState(initialTableRows); // Rows displayed in the table
+    const [statusFilter, setStatusFilter] = useState("all"); // Selected status filter
+    const [isDialogOpen, setIsDialogOpen] = useState(false); // Dialog visibility
 
     const handleStatusChange = (value: string) => {
         setStatusFilter(value);
         // Additional logic for filtering rows based on status can go here
     };
+
+
+    const handleAddTable = (newTable: any) => {
+        const newTableRow = {
+            id: tableRows.length + 1, // Generate a new ID
+            name: newTable.name,
+            description: newTable.description || "",
+            numPerson: parseInt(newTable.numPerson, 10),
+            status: newTable.status || "Đang hoạt động",
+            order: parseInt(newTable.order, 10),
+        };
+
+        setTableRows((prevRows) => [...prevRows, newTableRow]);
+
+        // Immediately update filteredRows based on the current filter
+        if (
+            statusFilter === "all" ||
+            (statusFilter === "active" && newTableRow.status === "Đang hoạt động") ||
+            (statusFilter === "inactive" && newTableRow.status === "Ngừng hoạt động")
+        ) {
+            setFilteredRows((prevRows) => [...prevRows, newTableRow]);
+        }
+
+        setIsDialogOpen(false); // Close dialog after saving
+    };
+
+    // Update filteredRows based on statusFilter
+    useEffect(() => {
+        if (statusFilter === "all") {
+            setFilteredRows(initialTableRows);
+        } else if (statusFilter === "active") {
+            setFilteredRows(initialTableRows.filter((row) => row.status === "Đang hoạt động"));
+        } else if (statusFilter === "inactive") {
+            setFilteredRows(initialTableRows.filter((row) => row.status === "Ngừng hoạt động"));
+        }
+    }, [statusFilter]);
+
     // @ts-ignore
     return (
         <Grid2 container spacing={2} sx={{height: '100vh', padding: '1rem'}}>
@@ -67,68 +123,14 @@ const TablesPage = () => {
                                 <AddTableDialog
                                     open={open}
                                     onClose={onClose}
-                                    onSave={(data) => console.log("Saved data:", data)}
+                                    onSave={handleAddTable}
                                 />
                             )}
                         />
                         {/*@ts-ignore*/}
-                        <CustomTable rows={tableRows}
+                        <CustomTable rows={filteredRows}
                                      columns={tableColumns}
-                                     renderCollapse={(row) => (
-                                         <ProductDetailsCollapse
-                                             productName={row.name}
-                                             imageUrl={row.imageUrl}
-                                             details={[
-                                                 {
-                                                     label: "Mã hàng hóa",
-                                                     value: row.code
-                                                 },
-                                                 {
-                                                     label: "Loại thực đơn",
-                                                     value: row.menuType
-                                                 },
-                                                 {
-                                                     label: "Nhóm hàng",
-                                                     value: row.category
-                                                 },
-                                                 {
-                                                     label: "Loại hàng",
-                                                     value: row.itemType
-                                                 },
-                                                 {
-                                                     label: "Định mức tồn",
-                                                     value: row.stockLimit,
-                                                     sx: {color: 'blue'}
-                                                 },
-                                                 {
-                                                     label: "Giá bán",
-                                                     value: row.price,
-                                                     sx: {
-                                                         fontWeight: 'bold',
-                                                         color: 'green'
-                                                     }
-                                                 },
-                                                 {
-                                                     label: "Giá vốn",
-                                                     value: row.cost,
-                                                     sx: {color: 'red'}
-                                                 },
-                                                 {
-                                                     label: "Trọng lượng",
-                                                     value: row.weight
-                                                 },
-                                                 {
-                                                     label: "Mô tả",
-                                                     value: row.description,
-                                                     sx: {fontStyle: 'italic'}
-                                                 },
-                                                 {
-                                                     label: "Ghi chú đặt hàng",
-                                                     value: row.orderNote
-                                                 },
-                                             ]}
-                                         />
-                                     )}/>
+                        />
                     </Box>
                 </Paper>
             </Grid2>

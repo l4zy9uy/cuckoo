@@ -9,9 +9,10 @@ type HeaderActionsProps = {
     DialogComponent: (props: {
         open: boolean;
         onClose: () => void
+        onSave?: (data: any) => void;
     }) => ReactNode; // Dialog as a function prop
-    selectedNum: number;
-    onDelete: () => void;
+    selectedNum?: number;
+    onDelete?: () => void;
 };
 
 const HeaderActions: React.FC<HeaderActionsProps> = ({
@@ -57,9 +58,9 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
             )}
             <Button variant="contained" startIcon={<AddIcon/>}
                     onClick={handleDialogOpen}
-                    // sx={{
-                    //     marginLeft: "auto"
-                    // }}
+                // sx={{
+                //     marginLeft: "auto"
+                // }}
             >
                 Thêm mới
             </Button>
