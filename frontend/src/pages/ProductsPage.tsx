@@ -169,7 +169,6 @@ const ProductsPage = () => {
                         searchPlaceholder="Theo mã, tên hàng"
                         accordionData={[
                             { title: "Loại thực đơn", items: [{ label: "Đồ ăn" }, { label: "Đồ uống" }, { label: "Khác" }] },
-                            { title: "Loại hàng", items: [{ label: "Hàng hóa thường" }, { label: "Chế biến" }, { label: "Dịch vụ" }, { label: "Combo - Đóng gói" }] },
                         ]}
                         onSearchChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                         onAccordionFilterChange={handleAccordionFilterChange}
@@ -190,7 +189,7 @@ const ProductsPage = () => {
                             }}
                         >
                             <HeaderActions
-                                text="Khách hàng"
+                                text="Thuc don"
                                 DialogComponent={({ open, onClose }) => (
                                     <AddProductDialog open={open} onClose={onClose} onSave={fetchProducts} />
                                 )}

@@ -1,5 +1,4 @@
-// src/components/AddTableDialog.tsx
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
     Dialog,
     DialogTitle,
@@ -13,8 +12,8 @@ import {
     FormControl,
     InputLabel,
     Box,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 type AddTableDialogProps = {
     open: boolean;
@@ -25,14 +24,15 @@ type AddTableDialogProps = {
 const AddTableDialog: React.FC<AddTableDialogProps> = ({
                                                            open,
                                                            onClose,
-                                                           onSave
+                                                           onSave,
                                                        }) => {
     const [formData, setFormData] = useState({
-        name: '',
-        area: '',
+        name: "",
+        description: "",
+        numPerson: "",
+        status: "Đang hoạt động", // Default to active
         order: 1,
-        seats: '',
-        notes: '',
+        area: "",
     });
 
     const handleChange = (field: string, value: string | number) => {
@@ -43,7 +43,13 @@ const AddTableDialog: React.FC<AddTableDialogProps> = ({
     };
 
     const handleSave = () => {
-        onSave(formData);
+        const sanitizedData = {
+            ...formData,
+            numPerson: parseInt(formData.numPerson, 10) || 0,
+            order: parseInt(formData.order, 10) || 1,
+        };
+        console.log(formData)
+        onSave(sanitizedData);
         onClose();
     };
 
@@ -55,36 +61,52 @@ const AddTableDialog: React.FC<AddTableDialogProps> = ({
                     aria-label="close"
                     onClick={onClose}
                     sx={{
-                        position: 'absolute',
+                        position: "absolute",
                         right: 8,
                         top: 8,
                         color: (theme) => theme.palette.grey[500],
                     }}
                 >
-                    <CloseIcon/>
+                    <CloseIcon />
                 </IconButton>
             </DialogTitle>
             <DialogContent dividers>
-                <Box component="form" noValidate autoComplete="off"
-                     sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
+                <Box
+                    component="form"
+                    noValidate
+                    autoComplete="off"
+                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                >
                     <TextField
                         label="Tên phòng/bàn"
                         required
                         fullWidth
                         value={formData.name}
-                        onChange={(e) => handleChange('name', e.target.value)}
+                        onChange={(e) => handleChange("name", e.target.value)}
+                    />
+                    <TextField
+                        label="Mô tả"
+                        fullWidth
+                        multiline
+                        value={formData.description}
+                        onChange={(e) => handleChange("description", e.target.value)}
+                    />
+                    <TextField
+                        label="Số người"
+                        type="number"
+                        fullWidth
+                        value={formData.numPerson}
+                        onChange={(e) => handleChange("numPerson", e.target.value)}
                     />
                     <FormControl fullWidth>
-                        <InputLabel>Khu vực</InputLabel>
+                        <InputLabel>Trạng thái</InputLabel>
                         <Select
-                            value={formData.area}
-                            onChange={(e) => handleChange('area', e.target.value)}
-                            label="Khu vực"
-                            variant='outlined'>
-                            <MenuItem value="">--Lựa chọn--</MenuItem>
-                            <MenuItem value="Lầu 1">Lầu 1</MenuItem>
-                            <MenuItem value="Lầu 2">Lầu 2</MenuItem>
-                            <MenuItem value="Lầu 3">Lầu 3</MenuItem>
+                            value={formData.status}
+                            onChange={(e) => handleChange("status", e.target.value)}
+                            label="Trạng thái"
+                        >
+                            <MenuItem value="Đang hoạt động">Đang hoạt động</MenuItem>
+                            <MenuItem value="Ngừng hoạt động">Ngừng hoạt động</MenuItem>
                         </Select>
                     </FormControl>
                     <TextField
@@ -92,27 +114,25 @@ const AddTableDialog: React.FC<AddTableDialogProps> = ({
                         type="number"
                         fullWidth
                         value={formData.order}
-                        onChange={(e) => handleChange('order', parseInt(e.target.value, 10))}
+                        onChange={(e) => handleChange("order", e.target.value)}
                     />
-                    <TextField
-                        label="Số ghế"
-                        type="number"
-                        fullWidth
-                        value={formData.seats}
-                        onChange={(e) => handleChange('seats', e.target.value)}
-                    />
-                    <TextField
-                        label="Ghi chú"
-                        fullWidth
-                        multiline
-                        value={formData.notes}
-                        onChange={(e) => handleChange('notes', e.target.value)}
-                    />
+                    <FormControl fullWidth>
+                        <InputLabel>Khu vực</InputLabel>
+                        <Select
+                            value={formData.area}
+                            onChange={(e) => handleChange("area", e.target.value)}
+                            label="Khu vực"
+                        >
+                            <MenuItem value="">--Lựa chọn--</MenuItem>
+                            <MenuItem value="Lầu 1">Lầu 1</MenuItem>
+                            <MenuItem value="Lầu 2">Lầu 2</MenuItem>
+                            <MenuItem value="Lầu 3">Lầu 3</MenuItem>
+                        </Select>
+                    </FormControl>
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleSave} variant="contained"
-                        color="success">
+                <Button onClick={handleSave} variant="contained" color="success">
                     Lưu
                 </Button>
                 <Button onClick={onClose} variant="outlined">
