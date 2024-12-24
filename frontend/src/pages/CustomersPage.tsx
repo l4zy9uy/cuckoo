@@ -5,7 +5,7 @@ import SidebarFilter from "@/components/SidebarFilter.tsx";
 import Box from "@mui/material/Box";
 import HeaderActions from "@/components/HeaderAction.tsx";
 import CustomTable from "@/components/CustomTable.tsx";
-import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx";
+//import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx";
 import AddCustomerDialog from "@/components/dialogs/AddCustomerDialog.tsx";
 
 const tableColumns = [
@@ -55,61 +55,62 @@ const CustomersPage = () => {
                                        )}/>
                         <CustomTable rows={tableRows}
                                      columns={tableColumns}
-                                     renderCollapse={(row) => (
-                                         <ProductDetailsCollapse
-                                             productName={row.name}
-                                             imageUrl={row.imageUrl}
-                                             details={[
-                                                 {
-                                                     label: "Mã hàng ",
-                                                     value: row.code
-                                                 },
-                                                 {
-                                                     label: "Loại thực đơn",
-                                                     value: row.menuType
-                                                 },
-                                                 {
-                                                     label: "Nhóm hàng",
-                                                     value: row.category
-                                                 },
-                                                 {
-                                                     label: "Loại hàng",
-                                                     value: row.itemType
-                                                 },
-                                                 {
-                                                     label: "Định mức tồn",
-                                                     value: row.stockLimit,
-                                                     sx: {color: 'blue'}
-                                                 },
-                                                 {
-                                                     label: "Giá bán",
-                                                     value: row.price,
-                                                     sx: {
-                                                         fontWeight: 'bold',
-                                                         color: 'green'
-                                                     }
-                                                 },
-                                                 {
-                                                     label: "Giá vốn",
-                                                     value: row.cost,
-                                                     sx: {color: 'red'}
-                                                 },
-                                                 {
-                                                     label: "Trọng lượng",
-                                                     value: row.weight
-                                                 },
-                                                 {
-                                                     label: "Mô tả",
-                                                     value: row.description,
-                                                     sx: {fontStyle: 'italic'}
-                                                 },
-                                                 {
-                                                     label: "Ghi chú đặt hàng",
-                                                     value: row.orderNote
-                                                 },
-                                             ]}
-                                         />
-                                     )}/>
+                                     // renderCollapse={(row) => (
+                                     //     // <ProductDetailsCollapse
+                                     //     //     productName={row.name}
+                                     //     //     imageUrl={row.imageUrl}
+                                     //     //     details={[
+                                     //     //         {
+                                     //     //             label: "Mã hàng ",
+                                     //     //             value: row.code
+                                     //     //         },
+                                     //     //         {
+                                     //     //             label: "Loại thực đơn",
+                                     //     //             value: row.menuType
+                                     //     //         },
+                                     //     //         {
+                                     //     //             label: "Nhóm hàng",
+                                     //     //             value: row.category
+                                     //     //         },
+                                     //     //         {
+                                     //     //             label: "Loại hàng",
+                                     //     //             value: row.itemType
+                                     //     //         },
+                                     //     //         {
+                                     //     //             label: "Định mức tồn",
+                                     //     //             value: row.stockLimit,
+                                     //     //             sx: {color: 'blue'}
+                                     //     //         },
+                                     //     //         {
+                                     //     //             label: "Giá bán",
+                                     //     //             value: row.price,
+                                     //     //             sx: {
+                                     //     //                 fontWeight: 'bold',
+                                     //     //                 color: 'green'
+                                     //     //             }
+                                     //     //         },
+                                     //     //         {
+                                     //     //             label: "Giá vốn",
+                                     //     //             value: row.cost,
+                                     //     //             sx: {color: 'red'}
+                                     //     //         },
+                                     //     //         {
+                                     //     //             label: "Trọng lượng",
+                                     //     //             value: row.weight
+                                     //     //         },
+                                     //     //         {
+                                     //     //             label: "Mô tả",
+                                     //     //             value: row.description,
+                                     //     //             sx: {fontStyle: 'italic'}
+                                     //     //         },
+                                     //     //         {
+                                     //     //             label: "Ghi chú đặt hàng",
+                                     //     //             value: row.orderNote
+                                     //     //         },
+                                     //     //     ]}
+                                     //     // />
+                                     // )}
+                        />
                     </Box>
                 </Paper>
             </Grid2>

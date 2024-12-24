@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import HeaderActions from "@/components/HeaderAction.tsx";
 import AddCustomerDialog from "@/components/dialogs/AddCustomerDialog.tsx";
 import CustomTable from "@/components/CustomTable.tsx";
-import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx";
+//import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx";
 
 const tableColumns = [
     {field: 'id', headerName: 'Mã nhà cung cấp', width: 400},
@@ -81,36 +81,36 @@ const SuppliersPage = () => {
                         <CustomTable
                             rows={tableRows}
                             columns={tableColumns}
-                            renderCollapse={(row) => (
-                                <ProductDetailsCollapse
-                                    productName={row.name}
-                                    imageUrl={row.imageUrl} // Add image URL if available
-                                    details={[
-                                        {
-                                            label: "Mã nhà cung cấp",
-                                            value: row.id
-                                        },
-                                        {
-                                            label: "Tên nhà cung cấp",
-                                            value: row.name
-                                        },
-                                        {label: "Điện thoại", value: row.phone},
-                                        {label: "Email", value: row.email},
-                                        {
-                                            label: "Nợ cần trả hiện tại",
-                                            value: row.debt
-                                        },
-                                        {
-                                            label: "Tổng mua",
-                                            value: row.totalPurchase,
-                                            sx: {
-                                                fontWeight: 'bold',
-                                                color: 'green'
-                                            }
-                                        },
-                                    ]}
-                                />
-                            )}
+                            // renderCollapse={(row) => (
+                            //     <ProductDetailsCollapse
+                            //         productName={row.name}
+                            //         imageUrl={row.imageUrl} // Add image URL if available
+                            //         details={[
+                            //             {
+                            //                 label: "Mã nhà cung cấp",
+                            //                 value: row.id
+                            //             },
+                            //             {
+                            //                 label: "Tên nhà cung cấp",
+                            //                 value: row.name
+                            //             },
+                            //             {label: "Điện thoại", value: row.phone},
+                            //             {label: "Email", value: row.email},
+                            //             {
+                            //                 label: "Nợ cần trả hiện tại",
+                            //                 value: row.debt
+                            //             },
+                            //             {
+                            //                 label: "Tổng mua",
+                            //                 value: row.totalPurchase,
+                            //                 sx: {
+                            //                     fontWeight: 'bold',
+                            //                     color: 'green'
+                            //                 }
+                            //             },
+                            //         ]}
+                            //     />
+                            // )}
                         />
                     </Box>
                 </Paper>
