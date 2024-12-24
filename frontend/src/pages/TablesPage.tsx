@@ -41,7 +41,7 @@ const TablesPage = () => {
     const [tableRows, setTableRows] = useState(initialTableRows); // State for all rows
     const [filteredRows, setFilteredRows] = useState(initialTableRows); // Rows displayed in the table
     const [statusFilter, setStatusFilter] = useState("all"); // Selected status filter
-    const [isDialogOpen, setIsDialogOpen] = useState(false); // Dialog visibility
+    const [_isDialogOpen, setIsDialogOpen] = useState(false); // Dialog visibility
 
     const handleStatusChange = (value: string) => {
         setStatusFilter(value);

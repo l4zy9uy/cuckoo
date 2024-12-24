@@ -43,7 +43,7 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
             <Typography fontWeight="bold" fontSize="28px" marginRight="auto">
                 {text}
             </Typography>
-            {selectedNum > 0 && (
+            {selectedNum && selectedNum > 0 && (
                 <Button
                     variant="contained"
                     color="error"
