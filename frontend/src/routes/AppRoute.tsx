@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import DashboardPage from '../pages/DashboardPage';
 import ProfilePage from '../pages/ProfilePage';
 import SettingsPage from '../pages/SettingsPage';
-import TableAndRoom from '../pages/TablesPage';
+import  TablesPage  from '../pages/TablesPage';
 import Login from '@/pages/Login.tsx';
 import ProductsPage from '../pages/ProductsPage';
 import PriceBookPage from '../pages/PriceBookPage';
@@ -28,7 +28,7 @@ const AppRoutes = () => (
         <Route path="/" element={<DashboardPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/tables" element={<TableAndRoom />} />
+        <Route path="/tables" element={<TablesPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/pricebook" element={<PriceBookPage />} />
