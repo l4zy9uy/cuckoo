@@ -10,46 +10,11 @@ import {
 } from '@mui/material';
 import {DonutLarge, TrendingUp} from '@mui/icons-material';
 import {BarChart} from '@mui/x-charts/BarChart'
-
+import {salesData, baseTopPerformers, allSalesData, allTopPerformers} from "@/components/fakeData.ts";
+import {useBranchContext} from "@/context/BranchContext.tsx";
 const DashboardPage: React.FC = () => {
     const [mode, setMode] = useState<'daily' | 'weekly' | 'monthly'>('daily');
     const [mode2, setMode2] = useState<'daily' | 'weekly' | 'monthly'>('daily');
-
-    const salesData = {
-        daily: [
-            { label: '7:00-8:30', sales: 150 },
-            { label: '8:30-10:00', sales: 200 },
-            { label: '10:00-11:30', sales: 180 },
-            { label: '11:30-13:00', sales: 250 },
-            { label: '13:00-14:30', sales: 220 },
-            { label: '14:30-16:00', sales: 300 },
-        ],
-        weekly: [
-            { label: 'Thứ Hai', sales: 1500 },
-            { label: 'Thứ Ba', sales: 1700 },
-            { label: 'Thứ Tư', sales: 1800 },
-            { label: 'Thứ Năm', sales: 1600 },
-            { label: 'Thứ Sáu', sales: 2000 },
-            { label: 'Thứ Bảy', sales: 2500 },
-            { label: 'Chủ Nhật', sales: 2200 },
-        ],
-        monthly: (() => {
-            const today = new Date();
-            const daysPassed = today.getDate();
-            return Array.from({ length: daysPassed }, (_, i) => ({
-                label: `Ngày ${i + 1}`,
-                sales: Math.floor(Math.random() * 500) + 100,
-            }));
-        })(),
-    };
-
-    const baseTopPerformers = [
-        { employee: "Nguyễn Văn A", sales: 8750 },
-        { employee: "Lê Văn B", sales: 6150 },
-        { employee: "Trần Thị C", sales: 5800 },
-        { employee: "Phạm Minh D", sales: 4900 },
-        { employee: "Hoàng Anh E", sales: 4300 },
-    ];
 
     const generateSalesData = (baseData: any, mode: any) => {
         const modifier = mode === 'daily' ? 30 : mode === 'weekly' ? 7 : 1;
@@ -58,8 +23,13 @@ const DashboardPage: React.FC = () => {
             sales: Math.floor(perf.sales / modifier) + Math.floor(Math.random() * 500),
         }));
     };
+    const { branchIndex } = useBranchContext();
 
-    const topPerformers = generateSalesData(baseTopPerformers, mode2);
+    const currentSalesData = allSalesData[branchIndex];
+
+    const currentTopPerformers = allTopPerformers[branchIndex];
+
+    const topPerformers = generateSalesData(currentTopPerformers.topPerformers, mode2);
     const currentData = salesData[mode];
     const totalSales = useMemo(() => currentData.reduce((acc, curr) => acc + curr.sales, 0), [mode]);
     const averageSales = useMemo(() => totalSales / currentData.length, [totalSales, currentData.length]);
@@ -70,6 +40,7 @@ const DashboardPage: React.FC = () => {
         { label: `${averageSales.toFixed(0)} Sản phẩm`, description: "Doanh thu trung bình", icon: <DonutLarge color="primary" /> },
         { label: `${maxSale} Sản phẩm`, description: "Doanh thu cao nhất", icon: <TrendingUp color="success" /> },
     ];
+
 
 
     return (
@@ -155,7 +126,7 @@ const DashboardPage: React.FC = () => {
                                     color: '#8884d9', // Bar color
                                 },
                             ]}
-                            dataset={salesData[mode]}
+                            dataset={currentSalesData[mode]}
                             height={450}
                         />
                     </CardContent>

@@ -15,7 +15,8 @@ export type whiteBarItem = {
     title: string,
     icon?: React.ReactNode,
     pathname?: string,
-    submenu?: whiteBarItem[]
+    submenu?: whiteBarItem[],
+    onClick?: () => void
 };
 
 
@@ -23,12 +24,12 @@ const DropdownMenuItem = ({
                               menuItem,
                               sx,
                               menuShowingDropdown,
-                              setMenuShowingDropdown
+                              setMenuShowingDropdown,
                           }: {
     menuItem: whiteBarItem;
     sx?: SxProps<Theme>,
     menuShowingDropdown: string;
-    setMenuShowingDropdown: (menuTitle: string) => void;
+    setMenuShowingDropdown: (menuTitle: any) => void;
 }) => {
     const theme = useTheme();
     const {title, submenu} = menuItem;
@@ -52,6 +53,7 @@ const DropdownMenuItem = ({
                     color: "#ffffff",
                     textDecoration: "none", // Remove underline from link
                 }}
+                onClick={subMenuItem.onClick}
             >
                 <ListItemIcon
                     sx={{color: "white"}}>{subMenuItem.icon}</ListItemIcon>
