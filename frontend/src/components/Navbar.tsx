@@ -9,8 +9,8 @@ import {
     FaWallet, FaChartLine
 } from 'react-icons/fa';
 import {TbToolsKitchen} from 'react-icons/tb';
-import {CiCalendar} from 'react-icons/ci';
-import {PiMoneyWavy} from 'react-icons/pi';
+//import {CiCalendar} from 'react-icons/ci';
+//import {PiMoneyWavy} from 'react-icons/pi';
 import restaurantLogo from '../assets/restaurant.png';
 import DropdownMenuItem from "@/components/DropdownMenuItem.tsx";
 import ViewCompactIcon from '@mui/icons-material/ViewCompact';
@@ -26,6 +26,7 @@ import PaidIcon from '@mui/icons-material/Paid';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import {useBranchContext} from "@/context/BranchContext.tsx";
 
 const stItems = [
     {
@@ -87,8 +88,8 @@ const navBarItems = [
     {icon: <FaWallet/>, title: 'Sổ quỹ', pathname: '/Cashier'},
     {icon: <FaChartLine/>, title: 'Báo cáo', pathname: '/Reports'},
     {icon: <TbToolsKitchen/>, title: 'Nhà bếp', pathname: '/Kitchen'},
-    {icon: <CiCalendar/>, title: 'Lễ tân', pathname: '/Reception'},
-    {icon: <PiMoneyWavy/>, title: 'Thu ngân', pathname: '/Cashier'}
+    // {icon: <CiCalendar/>, title: 'Lễ tân', pathname: '/Reception'},
+    // {icon: <PiMoneyWavy/>, title: 'Thu ngân', pathname: '/Cashier'}
 ];
 
 const settings = [
@@ -120,13 +121,38 @@ const settings = [
 ];
 
 const branches = [
-    {title: 'Chi nhánh 1', pathname: '/B1'},
-    {title: 'Chi nhánh 2', pathname: '/B2'},
-    {title: 'Chi nhánh 3', pathname: '/B3'},
-    {title: 'Chi nhánh 4', pathname: '/B4'},
-    {title: 'Chi nhánh 5', pathname: '/B5'},
-    {title: 'Chi nhánh 6', pathname: '/B6'}
+    {
+        title: 'Chi nhánh 1',
+        pathname: '/',
+        onClick: () => (window.location.href = '/'),
+    },
+    {
+        title: 'Chi nhánh 2',
+        pathname: '/',
+        onClick: () => (window.location.href = '/'),
+    },
+    {
+        title: 'Chi nhánh 3',
+        pathname: '/',
+        onClick: () => (window.location.href = '/'),
+    },
+    {
+        title: 'Chi nhánh 4',
+        pathname: '/',
+        onClick: () => (window.location.href = '/'),
+    },
+    {
+        title: 'Chi nhánh 5',
+        pathname: '/',
+        onClick: () => (window.location.href = '/'),
+    },
+    {
+        title: 'Chi nhánh 6',
+        pathname: '/',
+        onClick: () => (window.location.href = '/'),
+    },
 ];
+
 
 const menuItem = [
     {
@@ -148,18 +174,33 @@ const NavbarComponent: React.FC = () => {
         setMenuShowingDropdown(menuTitle);
     }, []);
 
+    const { setBranchIndex } = useBranchContext();
+
+    const handleBranchClick = (index: number) => {
+        console.log(index)
+        setBranchIndex(index);
+    };
+
     const menuItems = menuItem.map((menuItem) => {
         return (
             <DropdownMenuItem
                 key={menuItem.title}
-                menuItem={menuItem}
+                menuItem={{
+                    ...menuItem,
+                    submenu: menuItem.submenu?.map((subItem) => ({
+                        ...subItem,
+                        onClick: () => handleBranchClick(parseInt(subItem.title.slice(-1), 10)),
+                    })),
+                }}
                 menuShowingDropdown={menuShowingDropdown}
                 setMenuShowingDropdown={handleMenuShowingDropdownChange}
             />
         );
     });
+
     const leftMenuItems = navBarItems.slice(0, -3);
-    const rightMenuItems = navBarItems.slice(-3);
+    const rightMenuItems = navBarItems.slice(-1);
+
     return (
         <>
             {/* Top AppBar */}
