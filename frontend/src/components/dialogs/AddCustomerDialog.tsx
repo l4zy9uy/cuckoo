@@ -27,13 +27,13 @@ const CustomerDialog: React.FC<CustomerDialogProps> = ({
                                                            onSave
                                                        }) => {
     const [formData, setFormData] = useState({
-        customerId: '',
-        name: '',
-        phone: '',
-        address: '',
-        branch: '',
-        gender: '',
-        notes: '',
+        customer_id: 2,
+        name: "",
+        phone: "",
+        branch_id: -1,
+        gender: "",
+        email: "",
+        address: ""
     });
 
     const handleChange = (field: string, value: any) => {
@@ -63,8 +63,8 @@ const CustomerDialog: React.FC<CustomerDialogProps> = ({
                     <TextField
                         label="Mã khách hàng"
                         fullWidth
-                        value={formData.customerId}
-                        onChange={(e) => handleChange('customerId', e.target.value)}
+                        value={formData.customer_id}
+                        onChange={(e) => handleChange('customer_id', e.target.value)}
                     />
                     <TextField
                         label="Tên khách hàng"
@@ -88,8 +88,8 @@ const CustomerDialog: React.FC<CustomerDialogProps> = ({
                     <TextField
                         label="Chi nhánh"
                         fullWidth
-                        value={formData.branch}
-                        onChange={(e) => handleChange('branch', e.target.value)}
+                        value={formData.branch_id}
+                        onChange={(e) => handleChange('branch_id', e.target.value)}
                     />
                     <FormControl>
                         <Typography variant="subtitle1">Giới tính</Typography>
@@ -104,13 +104,6 @@ const CustomerDialog: React.FC<CustomerDialogProps> = ({
                                               label="Nữ"/>
                         </RadioGroup>
                     </FormControl>
-                    <TextField
-                        label="Ghi chú"
-                        fullWidth
-                        multiline
-                        value={formData.notes}
-                        onChange={(e) => handleChange('notes', e.target.value)}
-                    />
                 </Box>
             </DialogContent>
             <DialogActions>

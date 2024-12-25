@@ -8,24 +8,51 @@ import CustomTable from "@/components/CustomTable.tsx";
 //import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx";
 import AddCustomerDialog from "@/components/dialogs/AddCustomerDialog.tsx";
 
-const tableColumns = [
-    {field: 'id', headerName: 'Ma khach hang', width: 350},
-    {field: 'name', headerName: 'Tên khach hang', width: 350},
-    {field: 'phoneNumber', headerName: 'So dien thoai', width: 350},
-    {field: 'total sale', headerName: 'Tong ban', flexGrow: 1},
+const customerColumns = [
+    {field: 'customer_id', headerName: 'Ma khach hang', width: 550},
+    {field: 'name', headerName: 'Tên khach hang', width: 550},
+    {field: 'phone', headerName: 'So dien thoai', flexGrow: 1},
 
 ];
 
-const tableRows: any[] = []
+const customerRows: any[] = [
+    {
+        customer_id: 1,
+        name: "Nguyễn Văn A",
+        phone: "0912345678",
+        branch_id: 1,
+        gender: "Male",
+        email: "nguyenvana@example.com",
+        address: "123 Đường ABC, Quận 1, TP.HCM",
+    },
+    {
+        customer_id: 2,
+        name: "Trần Thị B",
+        phone: "0987654321",
+        branch_id: 2,
+        gender: "Female",
+        email: "tranthib@example.com",
+        address: "456 Đường DEF, Quận 5, TP.HCM",
+    },
+    {
+        customer_id: 3,
+        name: "Lê Văn C",
+        phone: "0123456789",
+        branch_id: 1,
+        gender: "Male",
+        email: "levanc@example.com",
+        address: "789 Đường GHI, Quận 3, TP.HCM",
+    },
+]
 
 const CustomersPage = () => {
-    // @ts-ignore
-    const [statusFilter, setStatusFilter] = useState('active');
+    const [customers, setCustomers] = useState(customerRows); // State for customer data
 
-    const handleStatusChange = (value: string) => {
-        setStatusFilter(value);
-        // Additional logic for filtering rows based on status can go here
+    // Handle saving a new customer
+    const handleAddCustomer = (newCustomer: any) => {
+        setCustomers((prev) => [...prev, newCustomer]);
     };
+
     return (
         <Grid2 container spacing={2} sx={{height: '100vh', padding: '1rem'}}>
             {/* Sidebar */}
@@ -33,8 +60,8 @@ const CustomersPage = () => {
                 <Paper elevation={3} sx={{height: '100%'}}>
                     <SidebarFilter
                         title="Tìm kiếm"
-                        searchPlaceholder="Ten khach hang"
-                        onStatusChange={handleStatusChange}
+                        searchPlaceholder="Tìm theo tên hoặc số điện thoại"
+                        onStatusChange={() => {}}
                     />
                 </Paper>
             </Grid2>
@@ -50,66 +77,11 @@ const CustomersPage = () => {
                                            <AddCustomerDialog
                                                open={open}
                                                onClose={onClose}
-                                               onSave={(data) => console.log("Saved data:", data)}
+                                               onSave={handleAddCustomer}
                                            />
                                        )}/>
-                        <CustomTable rows={tableRows}
-                                     columns={tableColumns}
-                                     // renderCollapse={(row) => (
-                                     //     // <ProductDetailsCollapse
-                                     //     //     productName={row.name}
-                                     //     //     imageUrl={row.imageUrl}
-                                     //     //     details={[
-                                     //     //         {
-                                     //     //             label: "Mã hàng ",
-                                     //     //             value: row.code
-                                     //     //         },
-                                     //     //         {
-                                     //     //             label: "Loại thực đơn",
-                                     //     //             value: row.menuType
-                                     //     //         },
-                                     //     //         {
-                                     //     //             label: "Nhóm hàng",
-                                     //     //             value: row.category
-                                     //     //         },
-                                     //     //         {
-                                     //     //             label: "Loại hàng",
-                                     //     //             value: row.itemType
-                                     //     //         },
-                                     //     //         {
-                                     //     //             label: "Định mức tồn",
-                                     //     //             value: row.stockLimit,
-                                     //     //             sx: {color: 'blue'}
-                                     //     //         },
-                                     //     //         {
-                                     //     //             label: "Giá bán",
-                                     //     //             value: row.price,
-                                     //     //             sx: {
-                                     //     //                 fontWeight: 'bold',
-                                     //     //                 color: 'green'
-                                     //     //             }
-                                     //     //         },
-                                     //     //         {
-                                     //     //             label: "Giá vốn",
-                                     //     //             value: row.cost,
-                                     //     //             sx: {color: 'red'}
-                                     //     //         },
-                                     //     //         {
-                                     //     //             label: "Trọng lượng",
-                                     //     //             value: row.weight
-                                     //     //         },
-                                     //     //         {
-                                     //     //             label: "Mô tả",
-                                     //     //             value: row.description,
-                                     //     //             sx: {fontStyle: 'italic'}
-                                     //     //         },
-                                     //     //         {
-                                     //     //             label: "Ghi chú đặt hàng",
-                                     //     //             value: row.orderNote
-                                     //     //         },
-                                     //     //     ]}
-                                     //     // />
-                                     // )}
+                        <CustomTable rows={customers}
+                                     columns={customerColumns}
                         />
                     </Box>
                 </Paper>
