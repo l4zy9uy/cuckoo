@@ -1,5 +1,5 @@
 // src/pages/DashboardPage.tsx
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import {
     Box,
     Typography,
@@ -8,62 +8,76 @@ import {
     Grid2,
     MenuItem, Select, FormControl,
 } from '@mui/material';
-import {DonutLarge, TrendingUp, TrendingDown} from '@mui/icons-material';
+import {DonutLarge, TrendingUp} from '@mui/icons-material';
 import {BarChart} from '@mui/x-charts/BarChart'
-
-const statsData = [
-    {label: "12.5K", description: "↑ 15%", icon: <TrendingUp color="success"/>},
-    {label: "11K", description: "↓ 4%", icon: <TrendingDown color="error"/>},
-    {label: "115%", description: "", icon: <DonutLarge color="primary"/>},
-    {label: "3.5K", description: "↑ 12%", icon: <TrendingUp color="success"/>}
-];
-
 
 const DashboardPage: React.FC = () => {
     const [mode, setMode] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+    const [mode2, setMode2] = useState<'daily' | 'weekly' | 'monthly'>('daily');
 
     const salesData = {
         daily: [
-            {label: '7:00-8:30', sales: 150},
-            {label: '8:30-10:00', sales: 200},
-            {label: '10:00-11:30', sales: 180},
-            {label: '11:30-13:00', sales: 250},
-            {label: '13:00-14:30', sales: 220},
-            {label: '14:30-16:00', sales: 300},
+            { label: '7:00-8:30', sales: 150 },
+            { label: '8:30-10:00', sales: 200 },
+            { label: '10:00-11:30', sales: 180 },
+            { label: '11:30-13:00', sales: 250 },
+            { label: '13:00-14:30', sales: 220 },
+            { label: '14:30-16:00', sales: 300 },
         ],
         weekly: [
-            {label: 'Mon', sales: 1500},
-            {label: 'Tue', sales: 1700},
-            {label: 'Wed', sales: 1800},
-            {label: 'Thu', sales: 1600},
-            {label: 'Fri', sales: 2000},
-            {label: 'Sat', sales: 2500},
-            {label: 'Sun', sales: 2200},
+            { label: 'Thứ Hai', sales: 1500 },
+            { label: 'Thứ Ba', sales: 1700 },
+            { label: 'Thứ Tư', sales: 1800 },
+            { label: 'Thứ Năm', sales: 1600 },
+            { label: 'Thứ Sáu', sales: 2000 },
+            { label: 'Thứ Bảy', sales: 2500 },
+            { label: 'Chủ Nhật', sales: 2200 },
         ],
         monthly: (() => {
             const today = new Date();
             const daysPassed = today.getDate();
-            return Array.from({length: daysPassed}, (_, i) => ({
-                label: `${i + 1}`,
-                sales: Math.floor(Math.random() * 500) + 100, // Example random sales
+            return Array.from({ length: daysPassed }, (_, i) => ({
+                label: `Ngày ${i + 1}`,
+                sales: Math.floor(Math.random() * 500) + 100,
             }));
         })(),
     };
 
-    const topPerformers = [
-        {employee: "John Smith", sales: 8750},
-        {employee: "Michael Lee", sales: 6150},
-        {employee: "Anna Taylor", sales: 5800},
-        {employee: "Sophia Brown", sales: 4900},
-        {employee: "David Johnson", sales: 4300},
+    const baseTopPerformers = [
+        { employee: "Nguyễn Văn A", sales: 8750 },
+        { employee: "Lê Văn B", sales: 6150 },
+        { employee: "Trần Thị C", sales: 5800 },
+        { employee: "Phạm Minh D", sales: 4900 },
+        { employee: "Hoàng Anh E", sales: 4300 },
     ];
+
+    const generateSalesData = (baseData: any, mode: any) => {
+        const modifier = mode === 'daily' ? 30 : mode === 'weekly' ? 7 : 1;
+        return baseData.map((perf: any) => ({
+            ...perf,
+            sales: Math.floor(perf.sales / modifier) + Math.floor(Math.random() * 500),
+        }));
+    };
+
+    const topPerformers = generateSalesData(baseTopPerformers, mode2);
+    const currentData = salesData[mode];
+    const totalSales = useMemo(() => currentData.reduce((acc, curr) => acc + curr.sales, 0), [mode]);
+    const averageSales = useMemo(() => totalSales / currentData.length, [totalSales, currentData.length]);
+    const maxSale = useMemo(() => Math.max(...currentData.map(s => s.sales)), [mode]);
+
+    const statsData = [
+        { label: `${totalSales.toLocaleString()} Sản phẩm`, description: "Tổng doanh thu", icon: <TrendingUp color="success" /> },
+        { label: `${averageSales.toFixed(0)} Sản phẩm`, description: "Doanh thu trung bình", icon: <DonutLarge color="primary" /> },
+        { label: `${maxSale} Sản phẩm`, description: "Doanh thu cao nhất", icon: <TrendingUp color="success" /> },
+    ];
+
 
     return (
         <Box sx={{padding: 3, backgroundColor: '#f9fafc'}}>
             <Grid2 container spacing={2} sx={{marginBottom: 3}}>
                 {/* Top Stat Cards */}
                 {statsData.map((stat, index) => (
-                    <Grid2 container size={{xs: 3}} key={index}>
+                    <Grid2 container size={{xs: 4}} key={index}>
                         <Card sx={{width: '100%'}}>
                             <CardContent sx={{
                                 display: 'flex',
@@ -91,7 +105,7 @@ const DashboardPage: React.FC = () => {
                              justifyContent="space-between" height={50}
                              alignItems="center">
                             <Typography variant="h6">
-                                Sales Data
+                                Dữ liệu bán hàng
                                 ({mode.charAt(0).toUpperCase() + mode.slice(1)} Mode)
                             </Typography>
                             <FormControl
@@ -117,11 +131,9 @@ const DashboardPage: React.FC = () => {
                                     value={mode}
                                     onChange={(e) => setMode(e.target.value as 'daily' | 'weekly' | 'monthly')}
                                 >
-                                    <MenuItem value="daily">Daily</MenuItem>
-                                    <MenuItem
-                                        value="weekly">Weekly</MenuItem>
-                                    <MenuItem
-                                        value="monthly">Monthly</MenuItem>
+                                    <MenuItem value="daily">Hằng ngày</MenuItem>
+                                    <MenuItem value="weekly">Hằng tuần</MenuItem>
+                                    <MenuItem value="monthly">Hằng tháng</MenuItem>
                                 </Select>
                             </FormControl>
                         </Box>
@@ -158,8 +170,8 @@ const DashboardPage: React.FC = () => {
                              justifyContent="space-between" height={50}
                              alignItems="center">
                             <Typography variant="h6">
-                                Sales Data
-                                ({mode.charAt(0).toUpperCase() + mode.slice(1)} Mode)
+                                Doanh so nhan vien
+                                ({mode2.charAt(0).toUpperCase() + mode2.slice(1)} Mode)
                             </Typography>
                             <FormControl
                                 sx={{
@@ -181,14 +193,12 @@ const DashboardPage: React.FC = () => {
                                         color: "#3c52b2"
                                     }}
                                     labelId="sales-mode-label"
-                                    value={mode}
-                                    onChange={(e) => setMode(e.target.value as 'daily' | 'weekly' | 'monthly')}
+                                    value={mode2}
+                                    onChange={(e) => setMode2(e.target.value as 'daily' | 'weekly' | 'monthly')}
                                 >
-                                    <MenuItem value="daily">Daily</MenuItem>
-                                    <MenuItem
-                                        value="weekly">Weekly</MenuItem>
-                                    <MenuItem
-                                        value="monthly">Monthly</MenuItem>
+                                    <MenuItem value="daily">Hằng ngày</MenuItem>
+                                    <MenuItem value="weekly">Hằng tuần</MenuItem>
+                                    <MenuItem value="monthly">Hằng tháng</MenuItem>
                                 </Select>
                             </FormControl>
                         </Box>
