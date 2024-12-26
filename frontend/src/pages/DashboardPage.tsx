@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import {DonutLarge, TrendingUp} from '@mui/icons-material';
 import {BarChart} from '@mui/x-charts/BarChart'
-import {salesData, allSalesData, allTopPerformers} from "@/components/fakeData.ts";
+import {allSalesData, allTopPerformers} from "@/components/usefulData.ts";
 import {useBranchContext} from "@/context/BranchContext.tsx";
 const DashboardPage: React.FC = () => {
     const [mode, setMode] = useState<'daily' | 'weekly' | 'monthly'>('daily');
@@ -26,14 +26,16 @@ const DashboardPage: React.FC = () => {
     const { branchIndex } = useBranchContext();
 
     const currentSalesData = allSalesData[branchIndex];
-
+    console.log("Current index: ", branchIndex)
     const currentTopPerformers = allTopPerformers[branchIndex];
 
-    const topPerformers = generateSalesData(currentTopPerformers.topPerformers, mode2);
-    const currentData = salesData[mode];
-    const totalSales = useMemo(() => currentData.reduce((acc, curr) => acc + curr.sales, 0), [mode]);
+    const topPerformers = useMemo(() => generateSalesData(currentTopPerformers.topPerformers, mode2), [branchIndex, mode2]);
+    const currentData = useMemo(() => currentSalesData[mode], [branchIndex, mode]);
+
+    const totalSales = useMemo(() => currentData.reduce((acc, curr) => acc + curr.sales, 0), [currentData]);
     const averageSales = useMemo(() => totalSales / currentData.length, [totalSales, currentData.length]);
-    const maxSale = useMemo(() => Math.max(...currentData.map(s => s.sales)), [mode]);
+    const maxSale = useMemo(() => Math.max(...currentData.map(s => s.sales)), [currentData]);
+
 
     const statsData = [
         { label: `${totalSales.toLocaleString()} Sản phẩm`, description: "Tổng doanh thu", icon: <TrendingUp color="success" /> },

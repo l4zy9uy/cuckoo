@@ -1,32 +1,47 @@
 import React, {useCallback, useState} from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import {
+    Menu,
+    MenuItem,
+    Box,
+    AppBar,
+    Toolbar,
+    Typography,
+    Button,
+    Dialog,
+    DialogContent,
+    TextField,
+    DialogActions,
+    DialogTitle,
+    FormControl,
+    InputLabel,
+    Select,
+} from '@mui/material';
 import {
     FaCog, FaMapMarkerAlt, FaHome, FaBox,
     FaTable, FaExchangeAlt, FaHandshake, FaUsers,
     FaWallet, FaChartLine
 } from 'react-icons/fa';
 import {TbToolsKitchen} from 'react-icons/tb';
-//import {CiCalendar} from 'react-icons/ci';
-//import {PiMoneyWavy} from 'react-icons/pi';
 import restaurantLogo from '../assets/restaurant.png';
 import DropdownMenuItem from "@/components/DropdownMenuItem.tsx";
-import ViewCompactIcon from '@mui/icons-material/ViewCompact';
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-//import LabelIcon from '@mui/icons-material/Label';
-import HandymanIcon from '@mui/icons-material/Handyman';
-import RoomIcon from '@mui/icons-material/Room';
-import HistoryIcon from '@mui/icons-material/History';
-import LogoutIcon from '@mui/icons-material/Logout';
-import GroupIcon from '@mui/icons-material/Group';
-import PersonIcon from '@mui/icons-material/Person';
-import PaidIcon from '@mui/icons-material/Paid';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { ViewCompact as ViewCompactIcon,
+    AssignmentTurnedIn as AssignmentTurnedInIcon,
+    Handyman as HandymanIcon,
+    Room as RoomIcon,
+    History as HistoryIcon,
+    Logout as LogoutIcon,
+    Group as GroupIcon,
+    Person as PersonIcon,
+    Paid as PaidIcon,
+    ShoppingCart as ShoppingCartIcon,
+    //ManageAccounts as ManageAccountsIcon,
+    CalendarMonth as CalendarMonthIcon
+} from '@mui/icons-material';
 import {useBranchContext} from "@/context/BranchContext.tsx";
+
+//import {CiCalendar} from 'react-icons/ci';
+//import {PiMoneyWavy} from 'react-icons/pi';
+//import LabelIcon from '@mui/icons-material/Label';
 
 const stItems = [
     {
@@ -66,11 +81,11 @@ const nvItems = [
         title: 'Lịch làm việc',
         pathname: '/Timesheet'
     },
-    {
-        icon: <ManageAccountsIcon/>,
-        title: 'Thiết lập nhân viên',
-        pathname: '/EmployerSettings'
-    }
+    // {
+    //     icon: <ManageAccountsIcon/>,
+    //     title: 'Thiết lập nhân viên',
+    //     pathname: '/EmployerSettings'
+    // }
 ];
 
 const navBarItems = [
@@ -88,6 +103,7 @@ const navBarItems = [
     // {icon: <PiMoneyWavy/>, title: 'Thu ngân', pathname: '/Cashier'}
 ];
 
+//@ts-ignore
 const settings = [
     {
         icon: <RoomIcon/>,
@@ -156,11 +172,11 @@ const menuItem = [
         icon: <FaMapMarkerAlt/>,
         submenu: branches
     },
-    {
-        title: 'hi',
-        icon: <FaCog/>,
-        submenu: settings
-    }
+    // {
+    //     title: 'Cai dat',
+    //     icon: <FaCog/>,
+    //     submenu: settings
+    // }
 ];
 
 
@@ -195,7 +211,31 @@ const NavbarComponent: React.FC = () => {
     });
 
     const leftMenuItems = navBarItems.slice(0, -3);
-    const rightMenuItems = navBarItems.slice(-1);
+    //tconst rightMenuItems = navBarItems.slice(-1);
+
+    const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleSettingsClick = (event: React.MouseEvent<HTMLElement>) => {
+        setSettingsAnchorEl(event.currentTarget);
+    };
+
+    const handleSettingsClose = () => {
+        setSettingsAnchorEl(null);
+    };
+
+    const handleDialogOpen = () => {
+        setIsDialogOpen(true);
+    };
+
+    const handleDialogClose = () => {
+        setIsDialogOpen(false);
+    };
+
+    const handleDialogSubmit = () => {
+        console.log("New user added"); // Replace with actual logic
+        setIsDialogOpen(false);
+    };
 
     return (
         <>
@@ -216,8 +256,30 @@ const NavbarComponent: React.FC = () => {
                     </Box>
 
                     {/* Right Section */}
-                    <Box display="flex" alignItems="center" gap={2}>
-                        {menuItems}
+                    <Box display="flex" flexDirection="row">
+                        <Box display="flex" alignItems="center" gap={2}>
+                            {menuItems}
+                        </Box>
+                        <Box display="flex" alignItems="center" gap={2}>
+                            <Button
+                                startIcon={<FaCog />}
+                                onClick={handleSettingsClick}
+                                sx={{ textTransform: 'none' }}
+                            >
+                                Cài đặt
+                            </Button>
+
+                            <Menu
+                                anchorEl={settingsAnchorEl}
+                                open={Boolean(settingsAnchorEl)}
+                                onClose={handleSettingsClose}
+                            >
+                                <MenuItem onClick={handleDialogOpen}>Thêm nhân viên</MenuItem>
+                                <MenuItem onClick={handleSettingsClose}>Thiết lập cửa hàng</MenuItem>
+                                <MenuItem onClick={handleSettingsClose}>Lịch sử thao tác</MenuItem>
+                                <MenuItem onClick={handleSettingsClose}>Đăng xuất</MenuItem>
+                            </Menu>
+                        </Box>
                     </Box>
                 </Toolbar>
             </AppBar>
@@ -260,25 +322,83 @@ const NavbarComponent: React.FC = () => {
                     </Box>
 
                     {/*Right Menu Items*/}
-                    <Box display="flex" gap={3}>
-                        {rightMenuItems.map((item) => (
-                            <DropdownMenuItem
-                                key={item.title}
-                                sx={{
-                                    color: 'white',
-                                    height: 'auto',
-                                    minHeight: '0',
-                                    fontSize: 'auto',
+                    {/*<Box display="flex" gap={3}>*/}
+                    {/*    {rightMenuItems.map((item) => (*/}
+                    {/*        <DropdownMenuItem*/}
+                    {/*            key={item.title}*/}
+                    {/*            sx={{*/}
+                    {/*                color: 'white',*/}
+                    {/*                height: 'auto',*/}
+                    {/*                minHeight: '0',*/}
+                    {/*                fontSize: 'auto',*/}
 
-                                }}
-                                menuItem={item}
-                                menuShowingDropdown={menuShowingDropdown}
-                                setMenuShowingDropdown={handleMenuShowingDropdownChange}
-                            />
-                        ))}
-                    </Box>
+                    {/*            }}*/}
+                    {/*            menuItem={item}*/}
+                    {/*            menuShowingDropdown={menuShowingDropdown}*/}
+                    {/*            setMenuShowingDropdown={handleMenuShowingDropdownChange}*/}
+                    {/*        />*/}
+                    {/*    ))}*/}
+                    {/*</Box>*/}
                 </Toolbar>
             </AppBar>
+            <Dialog open={isDialogOpen} onClose={handleDialogClose} maxWidth="sm" fullWidth>
+                <DialogTitle>Thêm nhân viên</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Tên nhân viên"
+                        fullWidth
+                        variant="outlined"
+                    />
+                    <TextField
+                        margin="dense"
+                        label="Email"
+                        fullWidth
+                        variant="outlined"
+                    />
+                    <TextField
+                        margin="dense"
+                        label="Tên đăng nhập"
+                        fullWidth
+                        variant="outlined"
+                    />
+                    <TextField
+                        margin="dense"
+                        label="Mật khẩu"
+                        type="password"
+                        fullWidth
+                        variant="outlined"
+                    />
+                    <TextField
+                        margin="dense"
+                        label="Xác nhận mật khẩu"
+                        type="password"
+                        fullWidth
+                        variant="outlined"
+                    />
+                    <FormControl fullWidth margin="dense">
+                        <InputLabel>Vai trò</InputLabel>
+                        <Select>
+                            {/*<MuiMenuItem value="Admin">Admin</MuiMenuItem>*/}
+                            <MenuItem value="Nhân viên">Nhân viên</MenuItem>
+                            <MenuItem value="Quản lý">Quản lý</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <FormControl fullWidth margin="dense">
+                        <InputLabel>Chi nhánh làm việc</InputLabel>
+                        <Select>
+                            {branches.map((branch) => (
+                                <MenuItem value={branch.title}>{branch.title}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose} color="secondary">Hủy</Button>
+                    <Button onClick={handleDialogSubmit} color="primary">Lưu</Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 };

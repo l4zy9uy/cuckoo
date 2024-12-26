@@ -1,6 +1,6 @@
 // src/pages/EmployeesPage.tsx
 import {useState} from 'react';
-import {Grid2, Paper, Box, Select, MenuItem, TextField} from '@mui/material';
+import {Grid2, Paper, Box, Select, MenuItem, TextField, Alert, Snackbar} from '@mui/material';
 //import SidebarFilter from '@/components/SidebarFilter.tsx';
 import HeaderActions from '@/components/HeaderAction.tsx';
 import CustomTable from '@/components/CustomTable.tsx';
@@ -46,10 +46,27 @@ const generateEmployeeRows = (count: number): EmployeeDetails[] => {
     });
 };
 
-const tableRows = generateEmployeeRows(30);
+const initialRows = generateEmployeeRows(30);
 
 const EmployeesPage = () => {
-    const [branch, setBranch] = useState('Tat ca chi nhanh');
+    const [tableRows, setTableRows] = useState(initialRows);
+    const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+    const [snackbar, setSnackbar] = useState({ open: false, type: "success", message: "" });
+    const [branch, setBranch] = useState('Tất cả chi nhánh');
+
+    const handleDeleteSelectedRows = () => {
+        const selectedIndices = Array.from(selectedRows); // Get indices as an array
+        const remainingRows = tableRows.filter((_, index) => !selectedIndices.includes(index)); // Filter by index
+        setTableRows(remainingRows);
+
+        // Clear the selected rows and show success message
+        setSelectedRows(new Set());
+        setSnackbar({ open: true, type: "success", message: "Deleted successfully!" });
+    };
+
+    const handleCloseSnackbar = () => {
+        setSnackbar({ ...snackbar, open: false });
+    };
 
     return (
         <Grid2 container spacing={2} sx={{height: '100vh', padding: '1rem'}}>
@@ -98,18 +115,43 @@ const EmployeesPage = () => {
                                 onSave={(data) => console.log("Saved data:", data)}
                             />
                         )}
+                        selectedNum={selectedRows.size}
+                        onDelete={handleDeleteSelectedRows}
                     />
 
                     {/* Table */}
                     <CustomTable
                         rows={tableRows}
                         columns={tableColumns}
+                        onRowSelectionChange={(ids) => setSelectedRows(new Set(ids))}
                         renderCollapse={(row) => (
                             <EmployeeDetailsCollapse employee={row as EmployeeDetails} />
                         )}
                     />
                 </Paper>
             </Grid2>
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                sx={{
+                    "& .MuiSnackbarContent-root": {
+                        minWidth: "400px",
+                        fontSize: "0.8rem",
+                        padding: "0.8rem",
+                    },
+                }}
+            >
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    //@ts-ignore
+                    severity={snackbar.type}
+                    sx={{ width: "100%", fontSize: "1rem", padding: "1rem" }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Grid2>
     );
 };
