@@ -1,6 +1,6 @@
 // src/pages/ImportOrdersPage.tsx
 import { useEffect, useState } from "react";
-import { Paper, Box } from "@mui/material";
+import { Paper, Box, Alert, Snackbar } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import CustomTable from "@/components/CustomTable.tsx";
 import SidebarFilter from "@/components/SidebarFilter.tsx";
@@ -72,11 +72,38 @@ const ImportOrdersPage = () => {
         search: "",
         status: [],
     });
+    const [importOrders, setImportOrders] = useState(importOrderRows);
     const [filteredRows, setFilteredRows] = useState(importOrderRows);
+    const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+    const [snackbar, setSnackbar] = useState({ open: false, type: "success", message: "" });
 
     // Handle search filter
     const handleSearchChange = (value: string) => {
         setFilters((prev) => ({ ...prev, search: value }));
+    };
+
+    const handleDeleteSelectedRows = () => {
+        const selectedIndices = Array.from(selectedRows); // Get indices as an array
+        const remainingRows = importOrders.filter((_, index) => !selectedIndices.includes(index)); // Filter by index
+        setImportOrders(remainingRows);
+
+        const updatedFilteredRows = remainingRows.filter((row) =>
+            Object.values(row).some((val) =>
+                val.toString().toLowerCase().includes(filters.search.toLowerCase())
+            )
+        );
+        setFilteredRows(updatedFilteredRows);
+
+        console.log("Selected Indices:", selectedIndices);
+        console.log("Remaining Rows:", remainingRows);
+
+        // Clear the selected rows and show success message
+        setSelectedRows(new Set());
+        setSnackbar({ open: true, type: "success", message: "Deleted successfully!" });
+    };
+
+    const handleCloseSnackbar = () => {
+        setSnackbar({ ...snackbar, open: false });
     };
 
     useEffect(() => {
@@ -116,10 +143,13 @@ const ImportOrdersPage = () => {
                             DialogComponent={({ open, onClose }) => (
                                 <AddImportDialog open={open} onClose={onClose} onSave={() => console.log("Saved data")} />
                             )}
+                            selectedNum={selectedRows.size}
+                            onDelete={handleDeleteSelectedRows}
                         />
                         <CustomTable
                             rows={filteredRows}
                             columns={importOrderColumns}
+                            onRowSelectionChange={(ids) => setSelectedRows(new Set(ids))}
                             renderCollapse={(row) => (
                                 <ImportOrderDetailsCollapse
                                     importCode={row.id}
@@ -134,6 +164,28 @@ const ImportOrdersPage = () => {
                     </Box>
                 </Paper>
             </Grid2>
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                sx={{
+                    "& .MuiSnackbarContent-root": {
+                        minWidth: "400px",
+                        fontSize: "0.8rem",
+                        padding: "0.8rem",
+                    },
+                }}
+            >
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    //@ts-ignore
+                    severity={snackbar.type}
+                    sx={{ width: "100%", fontSize: "1rem", padding: "1rem" }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Grid2>
     );
 };
