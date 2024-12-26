@@ -34,7 +34,7 @@ const AddEmployeeDialog: React.FC<AddEmployeeDialogProps> = ({
         name: '',
         phone: '',
         workBranch: [],
-        payBranch: 'Chi nhánh trung tâm',
+        payBranch: 'Chi nhánh 1',
     });
 
     const handleChange = (field: string, value: any) => {
@@ -129,8 +129,6 @@ const AddEmployeeDialog: React.FC<AddEmployeeDialogProps> = ({
                             >
                                 <MenuItem value="Tất cả chi nhánh">Tất cả chi
                                     nhánh</MenuItem>
-                                <MenuItem value="Chi nhánh trung tâm">Chi nhánh
-                                    trung tâm</MenuItem>
                                 <MenuItem value="Chi nhánh 1">Chi nhánh
                                     1</MenuItem>
                                 <MenuItem value="Chi nhánh 2">Chi nhánh

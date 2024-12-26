@@ -7,6 +7,7 @@ import HeaderActions from "@/components/HeaderAction.tsx";
 import CustomTable from "@/components/CustomTable.tsx";
 //import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx";
 import AddCustomerDialog from "@/components/dialogs/AddCustomerDialog.tsx";
+import { fakerVI as faker } from '@faker-js/faker';
 
 const customerColumns = [
     {field: 'customer_id', headerName: 'Ma khach hang', width: 550},
@@ -15,35 +16,28 @@ const customerColumns = [
 
 ];
 
-const customerRows: any[] = [
-    {
-        customer_id: 1,
-        name: "Nguyễn Văn A",
-        phone: "0912345678",
-        branch_id: 1,
-        gender: "Male",
-        email: "nguyenvana@example.com",
-        address: "123 Đường ABC, Quận 1, TP.HCM",
-    },
-    {
-        customer_id: 2,
-        name: "Trần Thị B",
-        phone: "0987654321",
-        branch_id: 2,
-        gender: "Female",
-        email: "tranthib@example.com",
-        address: "456 Đường DEF, Quận 5, TP.HCM",
-    },
-    {
-        customer_id: 3,
-        name: "Lê Văn C",
-        phone: "0123456789",
-        branch_id: 1,
-        gender: "Male",
-        email: "levanc@example.com",
-        address: "789 Đường GHI, Quận 3, TP.HCM",
-    },
-]
+const generateCustomerRows = (count: number): any[] => {
+    const branches = [1, 2, 3, 4, 5]; // Example branch IDs
+    return Array.from({ length: count }, (_, index) => {
+        const gender = faker.helpers.arrayElement(["Male", "Female"]);
+        const address = `${faker.location.streetAddress()}, ${faker.location.city()}, Việt Nam`;
+
+        return {
+            customer_id: index + 1,
+            name: faker.person.fullName({ sex: gender === "Male" ? "male" : "female" }),
+            phone: faker.phone.number({style: "human"}),
+            branch_id: faker.helpers.arrayElement(branches),
+            gender: gender,
+            address: address,
+            date: faker.date
+                .recent({days: 7})
+                .toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit" }),
+        };
+    });
+};
+
+const customerRows = generateCustomerRows(30);
+
 
 const CustomersPage = () => {
     const [customers, setCustomers] = useState(customerRows); // State for customer data

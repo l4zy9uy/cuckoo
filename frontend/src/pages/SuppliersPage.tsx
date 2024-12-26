@@ -7,6 +7,7 @@ import HeaderActions from "@/components/HeaderAction.tsx";
 import AddCustomerDialog from "@/components/dialogs/AddCustomerDialog.tsx";
 import CustomTable from "@/components/CustomTable.tsx";
 //import ProductDetailsCollapse from "@/components/ProductDetailsCollapse.tsx";
+import { fakerVI as faker } from '@faker-js/faker';
 
 const tableColumns = [
     {field: 'id', headerName: 'Mã nhà cung cấp', width: 400},
@@ -15,22 +16,28 @@ const tableColumns = [
     {field: 'totalPurchase', headerName: 'Tổng mua', flexGrow: 1},
 ];
 
-const tableRows = [
-    // Example data, replace with actual data
-    {
-        id: 'NCC0005',
-        name: 'Cửa hàng Đại Việt',
-        phone: '0909123456',
-        totalPurchase: '81,845,500'
-    },
-    {
-        id: 'NCC0004',
-        name: 'Đại lý Hồng Phúc',
-        phone: '0909234567',
-        totalPurchase: '29,989,500'
-    },
-    // Additional rows
-];
+const generateSupplierRows = (count: number) => {
+    return Array.from({ length: count }, (_, index) => ({
+        id: `NCC${(index + 1).toString().padStart(4, '0')}`, // ID in the format NCCXXXX
+        name: faker.helpers.arrayElement([
+            "Cửa hàng Đại Việt",
+            "Đại lý Hồng Phúc",
+            "Siêu thị Minh Tâm",
+            "Đại lý An Khánh",
+            "Kho Phân phối Sài Gòn",
+            "Siêu thị Thực Phẩm",
+            "Nhà Phân Phối Hương Việt",
+            "Đại Lý Phúc An",
+        ]), // Random Vietnamese supplier names
+        phone: faker.phone.number({style: "human"}), // Generate a Vietnamese-style phone number
+        totalPurchase: faker.commerce
+            .price({min: 10000000, max: 100000000, dec: 0, symbol: "VND "})
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ","), // Generate a formatted total purchase amount
+    }));
+};
+
+const tableRows = generateSupplierRows(15);
+
 const SuppliersPage = () => {
 
     // @ts-ignore

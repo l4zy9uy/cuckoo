@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import {DonutLarge, TrendingUp} from '@mui/icons-material';
 import {BarChart} from '@mui/x-charts/BarChart'
-import {salesData, baseTopPerformers, allSalesData, allTopPerformers} from "@/components/fakeData.ts";
+import {salesData, allSalesData, allTopPerformers} from "@/components/fakeData.ts";
 import {useBranchContext} from "@/context/BranchContext.tsx";
 const DashboardPage: React.FC = () => {
     const [mode, setMode] = useState<'daily' | 'weekly' | 'monthly'>('daily');
