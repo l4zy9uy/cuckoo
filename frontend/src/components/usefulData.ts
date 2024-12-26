@@ -112,7 +112,7 @@ export const allSalesData = [
         id: 1,
         name: "Dataset 1",
         daily: [
-            { label: '7:00-8:30', sales: 150 },
+            { label: '7:00-8:30', sales: 550 },
             { label: '8:30-10:00', sales: 200 },
             { label: '10:00-11:30', sales: 180 },
             { label: '11:30-13:00', sales: 250 },
