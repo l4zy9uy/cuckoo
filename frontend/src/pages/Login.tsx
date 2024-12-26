@@ -29,7 +29,7 @@ const Login = () => {
         try {
             // Make the API call to the backend for authentication
             console.log(formData);
-            const response = await axios.post('http://localhost:3001/api/auth/signin', {
+            const response = await axios.post('http://localhost:3000/api/auth/signin', {
                 username: formData.username,
                 password: formData.password,
             });
