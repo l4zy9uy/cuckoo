@@ -1,6 +1,6 @@
 // src/pages/InvoicesPage.tsx
 import { useEffect, useState } from 'react';
-import { Paper } from "@mui/material";
+import {Alert, Paper, Snackbar} from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
 import SidebarFilter from "@/components/SidebarFilter.tsx";
@@ -8,6 +8,8 @@ import HeaderActions from "@/components/HeaderAction.tsx";
 import CustomTable from "@/components/CustomTable.tsx";
 import InvoiceDetailsCollapse from "@/components/InvoicesDetailsCollapse.tsx";
 import AddInvoiceDialog from "@/components/dialogs/AddInvoiceDialog.tsx";
+import { fakerVI as faker} from '@faker-js/faker';
+
 
 // Các cột hiển thị trên bảng
 const invoiceColumns = [
@@ -18,57 +20,37 @@ const invoiceColumns = [
     { field: 'status', headerName: 'Trang thai', flexGrow: 1 },
 ];
 
-// Dữ liệu giả lập
-const invoiceRows = [
-    {
-        order_id: 1,
-        branch_id: 101,
-        table_id: 12,
-        customer_name: 'Nguyen Van A',
-        staff_id: 7,
-        total_price: 250.75,
-        status: "Đã thanh toán",
-        payment_method: "Thẻ tín dụng",
-        createdAt: "20-7 10:30",
-        updatedAt: "2024-12-24T11:00:00.000Z",
-        order_items: [
-            { menu_id: 1, quantity: 2, price: "50.00" },
-            { menu_id: 2, quantity: 1, price: "150.75" }
-        ]
-    },
-    {
-        order_id: 2,
-        branch_id: 102,
-        table_id: 14,
-        customer_name: 'Nguyen Van A',
-        staff_id: 9,
-        total_price: 450.00,
-        status: "Chưa thanh toán",
-        payment_method: "Tiền mặt",
-        createdAt: "2024-12-23T08:45:00.000Z",
-        updatedAt: "2024-12-23T09:15:00.000Z",
-        order_items: [
-            { menu_id: 3, quantity: 3, price: "150.00" },
-            { menu_id: 4, quantity: 2, price: "300.00" }
-        ]
-    },
-    {
-        order_id: 3,
-        branch_id: 103,
-        table_id: null,
-        customer_name: 'Nguyen Van A',
-        staff_id: 5,
-        total_price: 150.50,
-        status: "Chưa thanh toán",
-        payment_method: "Ví điện tử",
-        createdAt: "2024-12-22T14:20:00.000Z",
-        updatedAt: "2024-12-22T15:00:00.000Z",
-        order_items: [
-            { menu_id: 5, quantity: 1, price: "100.50" }
-        ]
-    },
-];
 
+const generateInvoiceRows = (count: number) => {
+    const statuses = ["Đã thanh toán", "Chưa thanh toán"];
+    const paymentMethods = ["Thẻ tín dụng", "Tiền mặt", "Ví điện tử"];
+
+    return Array.from({ length: count }, (_, index) => {
+        const orderItems = Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, () => ({
+            menu_id: faker.number.int({ min: 1, max: 50 }),
+            quantity: faker.number.int({ min: 1, max: 10 }),
+            price: faker.commerce.price({ min: 50, max: 500, dec: 2 }),
+        }));
+
+        const totalPrice = orderItems.reduce((total, item) => total + parseFloat(item.price) * item.quantity, 0);
+
+        return {
+            order_id: index + 1,
+            branch_id: faker.number.int({ min: 101, max: 110 }),
+            table_id: faker.datatype.boolean() ? faker.number.int({ min: 1, max: 50 }) : null,
+            customer_name: faker.person.fullName(),
+            staff_id: faker.number.int({ min: 1, max: 20 }),
+            total_price: parseFloat(totalPrice.toFixed(2)),
+            status: faker.helpers.arrayElement(statuses),
+            payment_method: faker.helpers.arrayElement(paymentMethods),
+            createdAt: faker.date.recent({ days: 30 }).toLocaleString("vi-VN", { hour12: false }),
+            updatedAt: faker.date.recent({ days: 10 }).toISOString(),
+            order_items: orderItems,
+        };
+    });
+};
+
+const invoiceRows = generateInvoiceRows(30);
 
 // @ts-ignore
 const accordionData = [];
@@ -83,21 +65,39 @@ const InvoicesPage = () => {
         search: "",
         accordion: {},
     });
-
     const [invoices, setInvoices] = useState(invoiceRows);
+    const [filteredRows, setFilteredRows] = useState(invoiceRows);
+    const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+    const [snackbar, setSnackbar] = useState({ open: false, type: "success", message: "" });
 
     const handleUpdateInvoice = (updatedInvoice: any) => {
         setInvoices(prevInvoices => prevInvoices.map(inv => inv.order_id === updatedInvoice.order_id ? updatedInvoice : inv));
     };
-
-    const [filteredRows, setFilteredRows] = useState(invoiceRows);
-
     const handleSearchChange = (value: string) => {
         setFilters((prev) => ({ ...prev, search: value }));
     };
-
     const handleAccordionFilterChange = (accordionFilters: Record<string, string[]>) => {
         setFilters((prev) => ({ ...prev, accordion: accordionFilters }));
+    };
+
+    const handleDeleteSelectedRows = () => {
+        const selectedIndices = Array.from(selectedRows); // Get indices as an array
+        const remainingRows = invoices.filter((_, index) => !selectedIndices.includes(index)); // Filter by index
+        setInvoices(remainingRows);
+
+        const updatedFilteredRows = remainingRows.filter((row) =>
+            Object.values(row).some((val) =>
+                val?.toString().toLowerCase().includes(filters.search.toLowerCase())
+            )
+        );
+        setFilteredRows(updatedFilteredRows);
+
+        console.log("Selected Indices:", selectedIndices);
+        console.log("Remaining Rows:", remainingRows);
+
+        // Clear the selected rows and show success message
+        setSelectedRows(new Set());
+        setSnackbar({ open: true, type: "success", message: "Deleted successfully!" });
     };
 
     useEffect(() => {
@@ -128,7 +128,11 @@ const InvoicesPage = () => {
         setFilteredRows(filtered);
     }, [filters, invoices]);  // Add invoices to the dependency array to trigger re-filtering when invoices update
 
+    const handleCloseSnackbar = () => {
+        setSnackbar({ ...snackbar, open: false });
+    };
 
+    // @ts-ignore
     return (
         <Grid2 container spacing={2} sx={{height: '100vh', padding: '1rem'}}>
             <Grid2>
@@ -149,18 +153,20 @@ const InvoicesPage = () => {
                     <Box sx={{padding: '2rem', flex: 1, overflow: 'auto'}}>
                         <HeaderActions
                             text="Hoa don"
-                            DialogComponent={({open, onClose}) => (
+                            DialogComponent={({ open, onClose }) => (
                                 <AddInvoiceDialog
                                     open={open}
                                     onClose={onClose}
                                     onSave={() => console.log("Saved data:")}
                                 />
                             )}
+                            selectedNum={selectedRows.size}
+                            onDelete={handleDeleteSelectedRows}
                         />
                         <CustomTable
                             rows={filteredRows}
                             columns={invoiceColumns}
-                            // Khi expand row, ta truyền dữ liệu vào InvoiceDetailsCollapse
+                            onRowSelectionChange={(ids) => setSelectedRows(new Set(ids))}
                             renderCollapse={(row) => (
                                 <InvoiceDetailsCollapse
                                     order_id={row.order_id}
@@ -179,6 +185,29 @@ const InvoicesPage = () => {
                     </Box>
                 </Paper>
             </Grid2>
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                sx={{
+                    "& .MuiSnackbarContent-root": {
+                        minWidth: "400px",
+                        fontSize: "0.8rem",
+                        padding: "0.8rem",
+                    },
+                }}
+            >
+
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    // @ts-ignore
+                    severity={snackbar.type}
+                    sx={{ width: "100%", fontSize: "1rem", padding: "1rem" }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Grid2>
     );
 };

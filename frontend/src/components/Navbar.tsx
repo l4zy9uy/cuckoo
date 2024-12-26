@@ -15,7 +15,7 @@ import restaurantLogo from '../assets/restaurant.png';
 import DropdownMenuItem from "@/components/DropdownMenuItem.tsx";
 import ViewCompactIcon from '@mui/icons-material/ViewCompact';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-import LabelIcon from '@mui/icons-material/Label';
+//import LabelIcon from '@mui/icons-material/Label';
 import HandymanIcon from '@mui/icons-material/Handyman';
 import RoomIcon from '@mui/icons-material/Room';
 import HistoryIcon from '@mui/icons-material/History';
@@ -34,11 +34,7 @@ const stItems = [
         title: 'Danh mục',
         pathname: '/Products'
     },
-    {
-        icon: <LabelIcon/>,
-        title: 'Thiết lập giá',
-        pathname: '/PriceBook'
-    },
+
     {
         icon: <AssignmentTurnedInIcon/>,
         title: 'Kiểm kho',
@@ -156,7 +152,7 @@ const branches = [
 
 const menuItem = [
     {
-        title: 'Chi nhánh trung tâm',
+        title: 'chon Chi nhánh',
         icon: <FaMapMarkerAlt/>,
         submenu: branches
     },

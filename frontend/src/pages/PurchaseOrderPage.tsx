@@ -7,6 +7,7 @@ import SidebarFilter from "@/components/SidebarFilter.tsx";
 import HeaderActions from "@/components/HeaderAction.tsx";
 import AddImportDialog from "@/components/dialogs/AddImportDialog.tsx";
 import ImportOrderDetailsCollapse from "@/components/ImpmortOrderDetailsCollapse.tsx";
+import { fakerVI as faker } from '@faker-js/faker';
 
 // Table Columns
 const importOrderColumns = [
@@ -18,40 +19,48 @@ const importOrderColumns = [
 ];
 
 // Table Rows
-const importOrderRows = [
-    {
-        id: "PN000048",
-        time: "18/12/2024 00:00",
-        supplier: "Đại lý Hồng Phúc",
-        totalAmount: "143,500",
-        status: "Đã nhập hàng",
-        items: [
-            { name: "Bánh mì", quantity: 50, price: 2000, total: 100000 },
-            { name: "Sữa hộp", quantity: 30, price: 30000, total: 900000 },
-        ],
-    },
-    {
-        id: "PN000049",
-        time: "18/12/2024 00:00",
-        supplier: "Đại lý Hồng Phúc",
-        totalAmount: "1,206,000",
-        status: "Đã nhập hàng",
-        items: [
-            { name: "Sữa chua", quantity: 40, price: 15000, total: 600000 },
-            { name: "Nước suối", quantity: 100, price: 2000, total: 200000 },
-        ],
-    },
-    {
-        id: "PN000050",
-        time: "18/12/2024 00:00",
-        supplier: "Cửa hàng Đại Việt",
-        totalAmount: "105,000",
-        status: "Đã nhập hàng",
-        items: [
-            { name: "Mì gói", quantity: 20, price: 5000, total: 100000 },
-        ],
-    },
-];
+const generateImportOrderRows = (count: number) => {
+    const suppliers = ["Đại lý Hồng Phúc", "Cửa hàng Đại Việt", "Siêu thị Minh Tâm", "Đại lý An Khánh", "Kho Phân phối Sài Gòn"];
+    const statuses = ["Đã nhập hàng", "Đang chờ xử lý", "Đã hủy"];
+    const vietnameseProductNames = [
+        "Bánh mì", "Sữa hộp", "Sữa chua", "Nước ngọt", "Mì gói",
+        "Cà phê", "Trà xanh", "Nước khoáng", "Gạo thơm", "Dầu ăn",
+        "Đường", "Muối", "Bột giặt", "Kem đánh răng", "Dầu gội",
+        "Nước mắm", "Tương ớt", "Tương cà", "Snack khoai tây", "Phô mai",
+        "Chả giò", "Nem nướng", "Bánh xèo", "Bánh tráng", "Thịt heo",
+        "Thịt bò", "Gà rán", "Cá hồi", "Tôm sú", "Cua biển"
+    ];
+
+    return Array.from({ length: count }, (_) => {
+        const numItems = faker.number.int({ min: 1, max: 5 });
+        const items = Array.from({ length: numItems }, () => {
+            const quantity = faker.number.int({ min: 10, max: 100 });
+            const price = faker.number.int({ min: 2000, max: 50000 });
+            return {
+                name: faker.helpers.arrayElement(vietnameseProductNames),
+                quantity,
+                price,
+                total: quantity * price,
+            };
+        });
+
+        const totalAmount = items.reduce((acc, item) => acc + item.total, 0);
+
+        return {
+            id: `PN${faker.number.int({ min: 100000, max: 999999 })}`,
+            time: faker.date
+                .future()
+                .toLocaleString("vi-VN", { hour12: false }),
+            supplier: faker.helpers.arrayElement(suppliers),
+            totalAmount: totalAmount.toLocaleString("vi-VN"),
+            status: faker.helpers.arrayElement(statuses),
+            items,
+        };
+    });
+};
+
+const importOrderRows = generateImportOrderRows(30);
+
 
 type Filters = {
     search: string;

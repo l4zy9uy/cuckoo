@@ -1,6 +1,6 @@
 // src/pages/TablesPage.tsx
 
-import {Grid2, Paper} from "@mui/material";
+import {Alert, Grid2, Paper, Snackbar} from "@mui/material";
 import SidebarFilter from "@/components/SidebarFilter.tsx";
 import Box from "@mui/material/Box";
 import HeaderActions from "@/components/HeaderAction.tsx";
@@ -18,20 +18,20 @@ const tableColumns = [
 
 // @ts-ignore
 const initialTableRows = Array.from({ length: 30 }, (_, i) => {
-    const isRoom = Math.random() < 0.5; // 50% chance to be a room or table
+    const isRoom = Math.random() < 0.5;
     const statuses = ["Ngừng hoạt động", "Đang hoạt động"];
 
     return {
-        id: i + 1, // Table ID
+        id: i + 1,
         name: isRoom
-            ? `Phòng ${Math.floor(101 + Math.random() * 400)}` // Random room name
-            : `Bàn ${String.fromCharCode(65 + Math.floor(Math.random() * 26))}${Math.floor(1 + Math.random() * 10)}`, // Random table name
+            ? `Phòng ${Math.floor(101 + Math.random() * 400)}`
+            : `Bàn ${String.fromCharCode(65 + Math.floor(Math.random() * 26))}${Math.floor(1 + Math.random() * 10)}`,
         description: isRoom
             ? `Phòng họp với sức chứa ${Math.floor(5 + Math.random() * 50)} người.`
             : `Bàn tại vị trí ${Math.random() < 0.5 ? "gần cửa sổ" : "gần quầy bar"}.`,
-        numPerson: Math.floor(2 + Math.random() * 50), // Capacity between 2 and 50
-        status: statuses[Math.floor(Math.random() * statuses.length)], // Random status
-        order: i + 1, // Order for display
+        numPerson: Math.floor(2 + Math.random() * 50),
+        status: statuses[Math.floor(Math.random() * statuses.length)],
+        order: i + 1,
     };
 });
 
@@ -42,10 +42,11 @@ const TablesPage = () => {
     const [filteredRows, setFilteredRows] = useState(initialTableRows); // Rows displayed in the table
     const [statusFilter, setStatusFilter] = useState("all"); // Selected status filter
     const [_isDialogOpen, setIsDialogOpen] = useState(false); // Dialog visibility
+    const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+    const [snackbar, setSnackbar] = useState({ open: false, type: "success", message: "" });
 
     const handleStatusChange = (value: string) => {
         setStatusFilter(value);
-        // Additional logic for filtering rows based on status can go here
     };
 
 
@@ -73,6 +74,32 @@ const TablesPage = () => {
         setIsDialogOpen(false); // Close dialog after saving
     };
 
+    const handleDeleteSelectedRows = () => {
+        const selectedIndices = Array.from(selectedRows); // Get indices as an array
+        const remainingRows = tableRows.filter((_, index) => !selectedIndices.includes(index)); // Filter by index
+        setTableRows(remainingRows);
+
+        // Update filtered rows based on the current status filter
+        const updatedFilteredRows = remainingRows.filter((row) => {
+            if (statusFilter === "all") return true;
+            if (statusFilter === "active") return row.status === "Đang hoạt động";
+            if (statusFilter === "inactive") return row.status === "Ngừng hoạt động";
+            return false;
+        });
+        setFilteredRows(updatedFilteredRows);
+
+        console.log("Selected Indices:", selectedIndices);
+        console.log("Remaining Rows:", remainingRows);
+
+        // Clear the selected rows and show success message
+        setSelectedRows(new Set());
+        setSnackbar({ open: true, type: "success", message: "Deleted successfully!" });
+    };
+
+
+
+
+
     // Update filteredRows based on statusFilter
     useEffect(() => {
         if (statusFilter === "all") {
@@ -83,6 +110,10 @@ const TablesPage = () => {
             setFilteredRows(initialTableRows.filter((row) => row.status === "Ngừng hoạt động"));
         }
     }, [statusFilter]);
+
+    const handleCloseSnackbar = () => {
+        setSnackbar({ ...snackbar, open: false });
+    };
 
     // @ts-ignore
     return (
@@ -119,21 +150,42 @@ const TablesPage = () => {
                     <Box sx={{padding: '2rem', flex: 1, overflow: 'auto'}}>
                         <HeaderActions
                             text="Phòng/Bàn"
-                            DialogComponent={({open, onClose}) => (
-                                <AddTableDialog
-                                    open={open}
-                                    onClose={onClose}
-                                    onSave={handleAddTable}
-                                />
+                            DialogComponent={({ open, onClose }) => (
+                                <AddTableDialog open={open} onClose={onClose} onSave={handleAddTable} />
                             )}
+                            selectedNum={selectedRows.size}
+                            onDelete={handleDeleteSelectedRows}
                         />
-                        {/*@ts-ignore*/}
-                        <CustomTable rows={filteredRows}
-                                     columns={tableColumns}
+                        <CustomTable
+                            rows={filteredRows}
+                            columns={tableColumns}
+                            onRowSelectionChange={(ids) => setSelectedRows(new Set(ids))}
                         />
                     </Box>
                 </Paper>
             </Grid2>
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                sx={{
+                    "& .MuiSnackbarContent-root": {
+                        minWidth: "400px",
+                        fontSize: "0.8rem",
+                        padding: "0.8rem",
+                    },
+                }}
+            >
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    //@ts-ignore
+                    severity={snackbar.type}
+                    sx={{ width: "100%", fontSize: "1rem", padding: "1rem" }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Grid2>
     );
 };

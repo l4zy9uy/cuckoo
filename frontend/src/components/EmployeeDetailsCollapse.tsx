@@ -1,6 +1,6 @@
 // src/components/EmployeeDetailsCollapse.tsx
 import React from 'react';
-import {Box, Typography, Grid2, Button, Divider} from '@mui/material';
+import {Box, Typography, Grid2, Button} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -8,16 +8,14 @@ export type EmployeeDetails = {
     id: string;
     name: string;
     workBranches: string;
-    account: string;
     phone: string;
-    startDate: string,
+    hireDate: string,
     address: string;
-    email: string;
-    notes?: string;
-    gender?: string;
-    birthDate?: string;
+    salary: number;
+    gender: string;
+    birthDate: string;
     idCard: string;
-    position?: string;
+    position: string;
 }
 export type EmployeeDetailsProps = {
     employee: EmployeeDetails;
@@ -73,11 +71,6 @@ const EmployeeDetailsCollapse: React.FC<EmployeeDetailsProps> = ({employee}) => 
                         </Grid2>
                         <Grid2 container size={{xs: 6}}>
                             <Typography variant="subtitle2"
-                                        color="text.secondary">Mã chấm
-                                công:</Typography>
-                        </Grid2>
-                        <Grid2 container size={{xs: 6}}>
-                            <Typography variant="subtitle2"
                                         color="text.secondary">Chi nhánh làm
                                 việc:</Typography>
                             <Typography
@@ -123,25 +116,6 @@ const EmployeeDetailsCollapse: React.FC<EmployeeDetailsProps> = ({employee}) => 
 
                 {/* Right Column - Notes and Actions */}
                 <Grid2 container size={{xs: 12, md: 3}} direction="column">
-                    <Typography variant="subtitle2" color="text.secondary">
-                        Ghi chú:
-                    </Typography>
-                    <Box
-                        sx={{
-                            padding: 2,
-                            borderRadius: 2,
-                            minHeight: 120,
-                            backgroundColor: 'grey.100',
-                            color: 'text.secondary',
-                            border: '1px solid',
-                            borderColor: 'divider',
-                        }}
-                    >
-                        {employee.notes || "Ghi chú..."}
-                    </Box>
-
-                    <Divider sx={{my: 1}}/>
-
                     <Box
                         sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
                         <Button variant="contained" color="primary"
